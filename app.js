@@ -1,5 +1,6 @@
 const fastify = require('fastify')({ logger: true });
 const path = require('path');
+const config = require('config');
 
 fastify.register(require('fastify-static'), {
     root: path.join(__dirname, 'src'),
@@ -14,7 +15,7 @@ const start = () => {
     const game = require('./game/game.js');
     game(io);
     
-    fastify.listen(8080, function (err, address) {
+    fastify.listen(config.get("defaultPort"), function (err, address) {
         if (err) {
             fastify.log.error(err)
             process.exit(1)
