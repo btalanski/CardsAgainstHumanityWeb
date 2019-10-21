@@ -137,4 +137,64 @@ export const wCards = [
     {
         value: "Os braços da Michelle Obama",
     },
+    {
+        value: "O jogo World of Warcraft.",
+    },
+    {
+        value: "Cobiçar a mulher do próximo.",
+    },
+    {
+        value: "Obesidade.",
+    },
+    {
+        value: "Um clipe homo-erótico sobre voleibol",
+    },
+    {
+        value: "Tétano.",
+    },
+    {
+        value: "Exibição para fins de acasalamento.",
+    },
+    {
+        value: "Torção testicular.",
+    },
+    {
+        value: "Buffet de camarão livre por R$ 4,99.",
+    },
+    {
+        value: "Feijoada.",
+    },
+    {
+        value: "Kanye West.",
+    },
+    {
+        value: "Queijo Quente.",
+    },
+    {
+        value: "Ataques de velociraptor.",
+    },
+    {
+        value: "Tirar a camisa.",
+    },
+    {
+        value: "Esmegma.",
+    },
+    {
+        value: "Alcoolismo.",
+    },
+    {
+        value: "Um cara de meia idade andando de patins.",
+    },
+    {
+        value: "Os raios de sentimentos bons dos Ursinhos Carinhosos.",
+    },
+    {
+        value: "Empanturrar-se e purgar-se.",
+    },
+    {
+        value: "Pirulitos gigantes.",
+    },
+    {
+        value: "Auto-repugnância.",
+    },
 ];
