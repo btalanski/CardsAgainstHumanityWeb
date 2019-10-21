@@ -4,7 +4,8 @@
   "description": "Web implementation of a Client/Server app to play Cards against Humanity",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
   "dependencies": {
     "config": "^3.2.3",
     "fastify": "^2.10.0",
+    "fastify-static": "^2.5.0",
     "socket.io": "^2.3.0"
   }
 }
