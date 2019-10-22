@@ -10,6 +10,9 @@ const commonPluginsConfig = merge([{
     plugins: [
         new ManifestPlugin(),
         new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'app.css'
+          }),
     ],
 }]);
 
@@ -18,7 +21,6 @@ const commonConfig = merge([{
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: 'dist/'
     },
     resolve: {
         alias: {
