@@ -10,12 +10,13 @@ const commonConfig = merge([
         output: {
             filename: 'app.js',
             path: path.resolve(__dirname, 'dist'),
+            publicPath: 'dist/'
         },
-        resolve: {
-            alias: {},
-            extensions: [],
-            modules: []
-        },
+        // resolve: {
+        //     alias: {},
+        //     extensions: [],
+        //     modules: ["src", "node_modules"],
+        // },
         module: {
             rules: [
                 {
@@ -81,9 +82,31 @@ const commonConfig = merge([
             ],
         },
         plugins: [
+            require('./webpack/htmlWebpack.config.js'),
             new ManifestPlugin(),
             new CleanWebpackPlugin(),
         ],
+    }
+]);
+
+const devConfig = merge([
+    {
+        devServer: {
+            contentBase: path.join(__dirname, 'dist'),
+            // Display only errors to reduce the amount of output.
+            stats: "errors-only",
+            // Parse host and port from env to allow customization.
+            //
+            // If you use Docker, Vagrant or Cloud9, set
+            // host: "0.0.0.0";
+            //
+            // 0.0.0.0 is available to all network devices
+            // unlike default `localhost`.
+            host: process.env.HOST, // Defaults to `localhost`
+            port: 8081,
+            open: true, // Open the page in browser,
+            historyApiFallback: true, // If you are using HTML5 History API based routing
+          },
     }
 ]);
 
@@ -91,5 +114,5 @@ module.exports = mode => {
     if (mode === "production") {
         return merge(commonConfig, { mode });
     }
-    return merge(commonConfig, { mode });
+    return merge(commonConfig, devConfig, { mode });
 };
