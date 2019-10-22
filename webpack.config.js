@@ -20,28 +20,24 @@ const commonConfig = merge([{
         path: path.resolve(__dirname, 'dist'),
         publicPath: 'dist/'
     },
-    // resolve: {
-    //     alias: {},
-    //     extensions: [],
-    //     modules: ["src", "node_modules"],
-    // },
+    resolve: {
+        alias: {
+            'react': 'preact/compat',
+            'react-dom': 'preact/compat',
+        },
+        // extensions: [],
+        // modules: ["src", "node_modules"],
+    },
     module: {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                exclude: /(node_modules|bower_components)/,
+                exclude: /(node_modules)/,
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: [
-                            ['@babel/preset-env', {
-                                modules: false,
-                                "targets": {
-                                    "ie": "11"
-                                }
-                            }],
-                        ],
-                        "plugins": [
+                        presets: [],
+                        plugins: [
                             ["@babel/plugin-transform-react-jsx", {
                                 "pragma": "h"
                             }],

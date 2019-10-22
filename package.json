@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "build": "webpack",
+    "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development"
   },
   "repository": {
@@ -40,6 +40,8 @@
     "postcss-loader": "^3.0.0",
     "preact": "^10.0.1",
     "precss": "^4.0.0",
+    "react-redux": "^7.1.1",
+    "redux-thunk": "^2.3.0",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^2.1.3",
