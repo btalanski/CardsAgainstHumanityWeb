@@ -2,6 +2,11 @@ import "./scss/index.scss";
 
 import { h, render, Component } from 'preact';
 import io from 'socket.io-client';
+import {
+    Chat,
+    PlayersList,
+    Debugger,
+} from "./js/components";
 
 class App extends Component {
     constructor(props) {
@@ -35,12 +40,13 @@ class App extends Component {
     socket = null;
 
     defaultState = {
-        gameState: null,
-        gameStateLoaded: false,
-        playerState: null,
+        gameState: {},
+        gameStateLoaded: true,
+        playerState: {},
         playersState: [],
-        chatState: null,
-        showDebug: false,
+        chatState: {},
+        showDebug: true,
+        chatActive: false,
     }
 
     sendUserData = () => {
@@ -63,67 +69,46 @@ class App extends Component {
     }
     render(props, state) {
         return <div class="columns h-100 is-gapless">
-            <div class="column is-one-fifth sidebar">
-                <h1 class="app-title title is-4">Cards against Humanity</h1>
-                <div class="container is-fluid">
-                    <div>
-                        <h1 class="section-title">Jogadores</h1>
-                        {this.renderPlayerList()}
-                    </div>
-                    <div>
-                        <h1 class="section-title">Chat</h1>
-                        {this.renderChat()}
-                    </div>
-                </div>
+            <div class={`column is-one-fifth sidebar ${state.chatActive ? "" : "minimized"}`}>
+                {this.renderChat()}
             </div>
-            <div class="column content">
-                {this.renderDebug()}
+            <div class="column main">
+                <div class="title-bar">
+                    <button onClick={this.toggleChat}>Chat</button>
+                    <h1 class="title is-4">Cards against Humanity</h1>
+                </div>
+                {this.renderPlayersList()}
+                {this.renderDebugger()}
             </div>
         </div>
     }
 
-    renderPlayerList = () => {
-
+    renderPlayersList = () => {
         const { gameStateLoaded = false } = this.state;
 
         if (gameStateLoaded) {
             const { gameState: { players = [] } } = this.state;
-
-            const list = players.map(p => {
-                const { nickName = "", portrait = "" } = p;
-                return <li>
-                    <img src={portrait} />
-                    <span>{nickName}</span>
-                </li>
-            });
-            return <ul class="playersList">{list}</ul>
+            return <PlayersList {...players} />
         }
         return null;
     }
 
     renderChat = () => {
-        const { gameStateLoaded = false } = this.state;
-
-        if (gameStateLoaded) {
+        const { gameStateLoaded = false, chatActive = false } = this.state;
+        if (gameStateLoaded && chatActive) {
             const { chatState: { log = [] } } = this.state;
-            const msgs = log.map(({ from = "", text = "" }) => (<li><b>{from}</b>: {text}</li>))
-            const list = <ul>{msgs}</ul>
-
-            return <div class="chatLog">{list}</div>;
+            return <Chat {...log} />;
         }
         return null;
     }
 
-    renderDebug = () => {
+    renderDebugger = () => {
         const { showDebug } = this.state;
+        return showDebug ? <Debugger {...this.state} /> : null;
+    }
 
-        if (showDebug) {
-            <pre>
-                {JSON.stringify(this.state, null, 2)}
-            </pre>
-        }
-
-        return null;
+    toggleChat = () => {
+        this.setState({ chatActive: !this.state.chatActive})
     }
 }
 

@@ -21,7 +21,7 @@ const commonConfig = merge([{
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: "dist"
+        // publicPath: "dist"
     },
     resolve: {
         alias: {
@@ -35,11 +35,11 @@ const commonConfig = merge([{
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                exclude: /(node_modules)/,
+                exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: [],
+                        presets: ["@babel/preset-env", "babel-preset-preact"],
                         plugins: [
                             ["@babel/plugin-transform-react-jsx", { "pragma": "h" }],
                             ['@babel/plugin-proposal-class-properties'],
