@@ -1,4 +1,4 @@
-export const wCards = [
+module.exports = [
     {
         value: "Uma maldição cigana.",
     },

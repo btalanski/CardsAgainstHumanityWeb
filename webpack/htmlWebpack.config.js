@@ -15,7 +15,7 @@ const plugin = (config) => {
         links: [],
         inlineManifestWebpackName: 'webpackManifest',
         scripts: [],
-        title: 'Cards Against Humanity App',
+        title: 'Cards Against Humanity AppP',
         // window: {}
     }
 

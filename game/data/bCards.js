@@ -1,4 +1,4 @@
-export const bCards = [
+module.exports = [
     {
         value: "Resolução da ANAC agora proíbe [#] em aeronaves.",
         draw: 0,

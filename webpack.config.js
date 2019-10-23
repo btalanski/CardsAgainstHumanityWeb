@@ -12,7 +12,7 @@ const commonPluginsConfig = merge([{
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
             filename: 'app.css'
-          }),
+        }),
     ],
 }]);
 
@@ -21,6 +21,7 @@ const commonConfig = merge([{
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist'),
+        publicPath: "dist"
     },
     resolve: {
         alias: {
@@ -84,11 +85,16 @@ const commonConfig = merge([{
                 ],
             },
         ],
-    },
-    plugins: [
-        require('./webpack/htmlWebpack.config.js'),
-    ],
+    }
 }]);
+
+const prodConfig = (config) => {
+    return merge([{
+        plugins: [
+            require('./webpack/htmlWebpack.config.js')(config),
+        ]
+    }]);
+};
 
 const devConfig = (config) => {
     return merge([{
@@ -118,15 +124,18 @@ module.exports = mode => {
     const defaults = {
         mode,
         devServerPort: config.get("devServerPort"),
+        host: "http://localhost:8080",
     };
 
     if (mode === "production") {
         return merge(
             commonConfig,
             commonPluginsConfig,
+            prodConfig(defaults),
             { mode }
         );
     }
+    
     return merge(
         commonConfig,
         commonPluginsConfig,

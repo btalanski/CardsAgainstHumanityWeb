@@ -3,7 +3,7 @@ const path = require('path');
 const config = require('config');
 
 fastify.register(require('fastify-static'), {
-    root: path.join(__dirname, 'src'),
+    root: path.join(__dirname, 'dist'),
 });
 
 fastify.get('/', function (req, reply) {
@@ -12,8 +12,8 @@ fastify.get('/', function (req, reply) {
 
 const start = () => {
     const io = require('socket.io')(fastify.server);
-    const game = require('./game/game.js');
-    game(io);
+    const gameServer = require('./game/server.js');
+    gameServer(io);
     
     fastify.listen(config.get("defaultPort"), function (err, address) {
         if (err) {
