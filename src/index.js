@@ -6,6 +6,7 @@ import {
     Chat,
     PlayersList,
     Debugger,
+    Overlay,
 } from "./js/components";
 
 class App extends Component {
@@ -47,6 +48,7 @@ class App extends Component {
         chatState: {},
         showDebug: true,
         chatActive: false,
+        showSetupOverlay: true,
     }
 
     sendUserData = () => {
@@ -69,6 +71,7 @@ class App extends Component {
     }
     render(props, state) {
         return <div class="columns h-100 is-gapless">
+            {this.renderSetupOverlay()}
             <div class={`column is-one-fifth sidebar ${state.chatActive ? "" : "minimized"}`}>
                 {this.renderChat()}
             </div>
@@ -107,8 +110,17 @@ class App extends Component {
         return showDebug ? <Debugger {...this.state} /> : null;
     }
 
+    renderSetupOverlay = () => {
+        const { showSetupOverlay = false } = this.state;
+        return <Overlay isVisible={showSetupOverlay} onClose={this.closeSetupModal}>Teste</Overlay>
+    }
+
     toggleChat = () => {
-        this.setState({ chatActive: !this.state.chatActive})
+        this.setState({ chatActive: !this.state.chatActive })
+    }
+
+    closeSetupModal = () => {
+        this.setState({ showSetupOverlay: false });
     }
 }
 
