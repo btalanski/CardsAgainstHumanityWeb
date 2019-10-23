@@ -1,7 +1,7 @@
 import { h, render } from "preact";
 
 export const renderMessages = (msgs) => {
-    const chat = msgs.map(({ from = "", text = "" }) => (<li><b>{from}</b>: {text}</li>))
+    const chat = msgs.map(({ from = "", text = "", color = "", style = "" }) => (<li><b>{from}</b>: {text}</li>))
     return <ul>{chat}</ul>
 }
 

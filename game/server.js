@@ -1,5 +1,6 @@
 const whiteDeck = require("./data/wCards");
 const blackDeck = require("./data/bCards");
+const randomColor = require('randomcolor');
 
 const defaultState = {
     players: [],
@@ -31,6 +32,8 @@ const defaultChatState = {
     log: [
         {
             from: "Server",
+            color: "#000000",
+            style: "bold",
             text: "Seja bem vindo(a)",
         }
     ],
@@ -62,6 +65,7 @@ const server = (io) => {
                 ...defaultPlayerState,
                 nickName,
                 socketId: socket.id,
+                color: randomColor({ luminosity: dark }),
             };
             gameState.players.push(player);
 
