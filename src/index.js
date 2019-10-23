@@ -7,6 +7,7 @@ import {
     PlayersList,
     Debugger,
     Overlay,
+    PlayerDeck,
 } from "./js/components";
 
 class App extends Component {
@@ -82,6 +83,7 @@ class App extends Component {
                 </div>
                 {this.renderPlayersList()}
                 {this.renderDebugger()}
+                <PlayerDeck />
             </div>
         </div>
     }
