@@ -5,7 +5,6 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const config = require('config');
 
-
 const commonPluginsConfig = merge([{
     plugins: [
         new ManifestPlugin(),
@@ -18,18 +17,11 @@ const commonPluginsConfig = merge([{
 
 const commonConfig = merge([{
     entry: './src/index.js',
-    output: {
-        filename: 'app.js',
-        path: path.resolve(__dirname, 'dist'),
-        // publicPath: "dist"
-    },
     resolve: {
         alias: {
             'react': 'preact/compat',
             'react-dom': 'preact/compat',
         },
-        // extensions: [],
-        // modules: ["src", "node_modules"],
     },
     module: {
         rules: [
@@ -88,16 +80,14 @@ const commonConfig = merge([{
     }
 }]);
 
-const prodConfig = (config) => {
-    return merge([{
-        plugins: [
-            require('./webpack/htmlWebpack.config.js')(config),
-        ]
-    }]);
-};
+const prodConfig = (config) => require("./webpack/prod.parts.js")(config);
 
 const devConfig = (config) => {
     return merge([{
+        output: {
+            filename: 'app.js',
+            path: path.resolve(__dirname, 'dist'),
+        },
         plugins: [
             require('./webpack/htmlWebpackDev.config.js')(config),
         ],
@@ -136,7 +126,7 @@ module.exports = mode => {
             { mode }
         );
     }
-    
+
     return merge(
         commonConfig,
         commonPluginsConfig,

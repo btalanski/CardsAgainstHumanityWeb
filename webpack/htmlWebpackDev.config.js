@@ -14,7 +14,6 @@ const plugin = (config) => {
         inlineManifestWebpackName: 'webpackManifest',
         scripts: [],
         title: 'Cards Against Humanity App',
-        // window: {}
     }
 
     return new HtmlWebpackPlugin(data);

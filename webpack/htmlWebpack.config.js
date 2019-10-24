@@ -4,10 +4,8 @@ const plugin = (config) => {
     
     const data = {
         inject: false,
-        template: require('html-webpack-template'),
         appMountId: 'app',
-        appMountHtmlSnippet: '<div class="app-spinner"><i class="fa fa-spinner fa-spin fa-5x" aria-hidden="true"></i></div>',
-        headHtmlSnippet: '<style>div.app-spinner {position: fixed;top:50%;left:50%;}</style >',
+        template: require('html-webpack-template'),
         baseHref: host,
         meta: [],
         mobile: true,
@@ -15,8 +13,7 @@ const plugin = (config) => {
         links: [],
         inlineManifestWebpackName: 'webpackManifest',
         scripts: [],
-        title: 'Cards Against Humanity AppP',
-        // window: {}
+        title: 'Cards Against Humanity App',
     }
 
     return new HtmlWebpackPlugin(data);
