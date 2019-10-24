@@ -12,7 +12,7 @@ export class Main extends Component {
     constructor(props) {
         super(props);
         this.state = this.defaultState;
-        this.registerListeners();        
+        this.registerListeners();
     }
 
     socket = this.props.socket;
@@ -76,6 +76,17 @@ export class Main extends Component {
                 return { ...state, chatState };
             });
         });
+
+        // this.socket.on('disconnect', (reason) => {
+        //     switch (reason) {
+        //         // the disconnection was initiated by the server, you need to reconnect manually
+        //         case "io server disconnect":
+        //         case "io client disconnect":
+        //         case "ping timeout":
+        //             socket.connect();
+        //             break;
+        //     }
+        // });
     }
 
     renderPlayersList = () => {

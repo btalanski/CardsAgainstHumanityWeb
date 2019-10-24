@@ -70,9 +70,6 @@ const server = (io) => {
     io.on('connection', function (socket) {
         console.log('user connected to session');
 
-        // Send initial game state to player
-        // socket.emit('initial_game_data', { gameState, chatState: chatState.log });
-
         //When a player joins update players array and emit the game state to all players
         socket.on('player_join', function (data) {
             console.log("player_join");
