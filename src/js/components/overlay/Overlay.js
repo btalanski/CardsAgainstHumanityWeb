@@ -9,13 +9,13 @@ export class Overlay extends Component {
         this.onMount();
     }
 
-    render({ children, isVisible }) {
+    render({ children, isVisible, allowClose = true }) {
 
         if (isVisible) {
             return <div class="modal is-active">
                 <div class="modal-background" onClick={this.onClose}></div>
                 {children}
-                <button class="modal-close is-large" aria-label="close" onClick={this.onClose}></button>
+                {allowClose && <button class="modal-close is-large" aria-label="close" onClick={this.onClose}></button>}
             </div>
         }
 
@@ -29,8 +29,11 @@ export class Overlay extends Component {
     }
 
     onClose = () => {
-        const { onClose = () => null } = this.props;
-        this.$html.classList.remove("is-clipped");
-        onClose();
+        const { onClose = () => null, allowClose } = this.props;
+
+        if (allowClose) {
+            this.$html.classList.remove("is-clipped");
+            onClose();
+        }
     }
 }

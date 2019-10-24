@@ -1,22 +1,15 @@
 import { h, render } from "preact";
 import { Overlay } from "../overlay";
+import { UserForm } from "./form";
 
-export const SetupOverlay = ({ isVisible, onClose }) => {
-    return <Overlay {...{ isVisible, onClose }}>
+export const SetupOverlay = ({ isVisible, onSubmit }) => {
+    return <Overlay {...{ isVisible, allowClose: false, }}>
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Criar nova partida</p>
+                <p class="modal-card-title">Entrar na partida.</p>
             </header>
             <section class="modal-card-body">
-                <form>
-                    <div class="field">
-                        <label class="label">Nome da sala</label>
-                        <div class="control">
-                            <input class="input" type="text" placeholder="" />
-                        </div>
-                    </div>
-                    <button class="button is-success">Criar!</button>
-                </form>
+                <UserForm onSubmit={onSubmit} ></UserForm>
             </section>
             <footer class="modal-card-foot">
             </footer>

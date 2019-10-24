@@ -12,53 +12,19 @@ export class Main extends Component {
     constructor(props) {
         super(props);
         this.state = this.defaultState;
-
-        this.socket.on('game_data', ({ gameState, chatState }) => {
-            console.log("game_data", gameState);
-            this.setState((state) => {
-                const { gameSetup } = gameState;
-                return {
-                    ...state,
-                    gameState,
-                    chatState,
-                    gameStateLoaded: true,
-                    showSetupOverlay: !gameSetup,
-                };
-            })
-        });
-
-        this.socket.on('chat_msg', (message) => {
-            console.log("game_data", gameState);
-            this.setState((state) => {
-                return {
-                    ...state,
-                    chatState: chatState.push(message),
-                };
-            })
-        });
+        this.registerListeners();        
     }
 
     socket = this.props.socket;
 
     defaultState = {
-        gameState: {},
-        gameStateLoaded: true,
-        playerState: {},
+        gameState: null,
+        gameStateLoaded: false,
+        playerState: null,
         playersState: [],
-        chatState: {},
+        chatState: [],
         showDebug: true,
-        chatActive: false,
         showSetupOverlay: false,
-    }
-
-    sendUserData = () => {
-        this.socket.emit('player_join', {
-            nickName: "Bruno"
-        });
-    }
-
-    componentDidMount() {
-        this.sendUserData();
     }
 
     render(props, state) {
@@ -68,6 +34,48 @@ export class Main extends Component {
             {this.renderPlayersList()}
             {this.renderDebugger()}
         </div>
+    }
+
+    registerListeners = () => {
+        this.socket.on('initial_game_data', ({ gameState, chatState }) => {
+            console.log("initial_game_data", gameState);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    gameState,
+                    chatState,
+                    gameStateLoaded: true,
+                };
+            })
+        });
+
+        this.socket.on('player_data', playerState => {
+            console.log("player_data", playerState);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    playerState,
+                };
+            })
+        });
+
+        this.socket.on('game_data', gameState => {
+            console.log("game_data", gameState);
+            this.setState((state) => {
+                return {
+                    ...state,
+                    gameState,
+                };
+            })
+        });
+
+        this.socket.on('chat_data', (msg) => {
+            console.log("chat_data", msg);
+            this.setState((state) => {
+                const chatState = [...state.chatState, msg];
+                return { ...state, chatState };
+            });
+        });
     }
 
     renderPlayersList = () => {
@@ -81,10 +89,10 @@ export class Main extends Component {
     }
 
     renderChat = () => {
-        const { gameStateLoaded = false, chatActive = false } = this.state;
-        if (gameStateLoaded && chatActive) {
+        const { gameStateLoaded = false } = this.state;
+        if (gameStateLoaded) {
             const { chatState: { log = [] } } = this.state;
-            return <Chat {...log} />;
+            return <Chat {...log} ></Chat>;
         }
         return null;
     }
@@ -95,8 +103,11 @@ export class Main extends Component {
     }
 
     renderSetupOverlay = () => {
-        const { showSetupOverlay } = this.state;
-        return <SetupOverlay isVisible={showSetupOverlay} onClose={this.closeSetupModal} />;
+        const { gameState } = this.state;
+
+        return !gameState
+            ? <SetupOverlay isVisible={true} onSubmit={this.submitPlayerInfo} />
+            : null;
     }
 
     toggleChat = () => {
@@ -105,6 +116,11 @@ export class Main extends Component {
 
     closeSetupModal = () => {
         this.setState({ showSetupOverlay: false });
+    }
+
+    submitPlayerInfo = (data) => {
+        console.log(data);
+        this.socket.emit("player_join", data);
     }
 }
 

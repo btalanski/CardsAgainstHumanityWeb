@@ -1,27 +1,22 @@
-const whiteDeck = require("./data/wCards");
-const blackDeck = require("./data/bCards");
+const answerCards = require("./data/answerCards");
+const questionCards = require("./data/questionCards");
 const randomColor = require('randomcolor');
 const shuffle = require('shuffle-array');
+const uid = require('uid');
 
 const defaultState = {
     players: [],
-    roomName: "",
     matchStarted: false,
-    gameSetup: false,
-    maxAllowedPlayers: 6,
+    maxAllowedPlayers: 8,
     defaultTurnTimeoutSeconds: 60,
     defaultTimeoutSeconds: 5,
     maxNumberOfRounds: null,
     roundsCount: null,
-    questionDeck: [],
-    answerDeck: [],
-    selectedCard: null,
-    enableChat: true,
+    roundQuestion: null,
 };
 
 const defaultPlayerState = {
-    nickName: null,
-    isRoomOwner: false,
+    id: null,
     color: "#000000",
     portrait: null,
     isRoundLeader: false,
@@ -63,48 +58,53 @@ const server = (io) => {
 
     const gameState = {
         ...defaultState,
-        roomName: "Demo",
-        maxNumberOfRounds: 5,
         roundsCount: 0,
-        questionDeck: blackDeck,
-        answerDeck: whiteDeck,
     }
 
     const chatState = {
         ...defaultChatState,
     }
 
+    let roundCards = shuffle([...answerCards]);
+
     io.on('connection', function (socket) {
-        console.log('a user connected');
+        console.log('user connected to session');
 
         // Send initial game state to player
-        socket.emit('game_data', { gameState, chatState });
+        // socket.emit('initial_game_data', { gameState, chatState: chatState.log });
 
-        //When a play joins update players array and emit the game state to all players
+        //When a player joins update players array and emit the game state to all players
         socket.on('player_join', function (data) {
             console.log("player_join");
-
-            const isFirstPlayer = gameState.players.length;
 
             const { nickName } = data;
             const player = {
                 ...defaultPlayerState,
                 nickName,
+                id: uid(),
                 socketId: socket.id,
                 color: randomColor({ luminosity: "dark" }),
                 portrait: shuffle(portraits, { copy: true })[0],
-                isRoomOwner: isFirstPlayer === 0 ? true : false,
             };
+
             gameState.players.push(player);
 
-            chatState.log.push({
+            const log = {
                 from: "Server",
                 text: `${nickName} entrou no jogo.`,
                 color: "#000000",
                 style: "bold",
-            });
+            };
 
-            io.emit('game_data', { gameState, chatState });
+            chatState.log.push(log);
+            
+            // Send player state to new player
+            socket.emit('player_data', player);
+            // Send game state to all players
+            io.emit('game_data', gameState);
+            // Send chat state to all players
+            io.emit('chat_data', log);
+
         });
 
         // On player disconnect
@@ -116,14 +116,19 @@ const server = (io) => {
             if (disconnectedPlayer) {
                 gameState.players = gameState.players.filter(({ socketId }) => socketId !== id);
 
-                chatState.log.push({
+                const log = {
                     from: "Server",
                     text: `${disconnectedPlayer.nickName} saiu do jogo.`,
                     color: "#000000",
                     style: "bold",
-                });
+                };
 
-                io.emit('game_data', { gameState, chatState });
+                chatState.log.push(log);
+
+                // Send game state to all players
+                io.emit('game_data', gameState);
+                // Send chat state to all players
+                io.emit('chat_data', log);
             }
 
         });
