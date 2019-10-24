@@ -117,6 +117,7 @@ const devConfig = (config) => {
             open: true, // Open the page in browser,
             historyApiFallback: true, // If you are using HTML5 History API based routing
         },
+        devtool: "inline-source-map",
     }]);
 }
 

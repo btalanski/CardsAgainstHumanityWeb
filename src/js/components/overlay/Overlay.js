@@ -14,9 +14,7 @@ export class Overlay extends Component {
         if (isVisible) {
             return <div class="modal is-active">
                 <div class="modal-background" onClick={this.onClose}></div>
-                <div class="modal-content">
-                    {children}
-                </div>
+                {children}
                 <button class="modal-close is-large" aria-label="close" onClick={this.onClose}></button>
             </div>
         }

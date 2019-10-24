@@ -5,7 +5,6 @@ const plugin = (config) => {
     const data = {
         inject: false,
         template: require('html-webpack-template'),
-        appMountId: 'app',
         baseHref: `http://localhost:${devServerPort}`,
         devServer: `http://localhost:${devServerPort}`,
         meta: [],
