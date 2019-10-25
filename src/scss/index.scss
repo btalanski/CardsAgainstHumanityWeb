@@ -80,15 +80,28 @@ body,
   flex-flow: row wrap;
   padding: 0 0.5rem 0 0;
   margin-bottom: 1rem;
-  position: absolute;
-  top: 80px;
-  left: 10px;
+
+  @media screen and (min-width: 600px) {
+    position: absolute;
+    top: 80px;
+    left: 10px;
+  }
+
+  @media screen and (max-width: 599px) {
+    ul {
+      display: flex;
+    }
+  }
 
   li {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
     margin-bottom: 0.85rem;
+
+    @media screen and (max-width: 599px) {
+      margin: 0.85rem;
+    }
 
     .img-frame {
       width: 65px;
