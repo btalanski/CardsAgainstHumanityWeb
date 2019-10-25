@@ -12,9 +12,9 @@ import { mockState } from "../utils/mockState.js";
 export class Main extends Component {
     constructor(props) {
         super(props);
+        // this.state = this.defaultState;
         this.state = mockState;
         this.registerListeners();
-        console.log(this.state);
     }
 
     socket = this.props.socket;
@@ -25,7 +25,7 @@ export class Main extends Component {
         playerState: null,
         playersState: [],
         chatState: [],
-        showDebug: true,
+        showDebug: false,
         showSetupOverlay: false,
     }
 

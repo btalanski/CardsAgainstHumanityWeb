@@ -23,7 +23,7 @@ export class UserForm extends Component {
             <div class="field">
                 <label class="label">Escolha seu apelido</label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="" value={this.state.nickName} onChange={this.handleChange} required={true}/>
+                    <input class="input" type="text" placeholder="" value={this.state.nickName} onChange={this.handleChange} maxLength={10} required={true}/>
                 </div>
             </div>
             <input class="button is-success" type="submit" value="Entrar!" />

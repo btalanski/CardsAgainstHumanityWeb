@@ -9,7 +9,7 @@ export const mockState = {
                 "selectedCards": [],
                 "socketId": "1t9AjvsdSKgvVvBSAAAB",
                 "points": 100,
-                "nickName": "Brunooooooooo"
+                "nickName": "Brunooooo"
             },
             {
                 "id": "tou0np27",

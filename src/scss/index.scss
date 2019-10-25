@@ -64,7 +64,7 @@ body,
   }
 
   .form {
-    > * {
+    >* {
       border-radius: 0 !important;
     }
   }
@@ -100,9 +100,10 @@ body,
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    margin-bottom: 0.85rem;
-    max-width: 100px;
+    margin-bottom: 1.2rem;
+    max-width: 90px;
     position: relative;
+
     @media screen and (max-width: 1139px) {
       margin: 0.85rem;
     }
@@ -115,7 +116,8 @@ body,
       border-radius: 50%;
       box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.33), 0 0px 15px 0 rgba(0, 0, 0, 0.19);
       margin: auto;
-      > img {
+
+      >img {
         display: inline;
         margin: 0 auto;
         margin-left: 0;
@@ -131,16 +133,18 @@ body,
       background: #222;
       margin-top: .5rem;
       text-align: center;
-      padding: 0.1rem .5rem;
-      min-width: 100px;
-      max-width: 100px;
-      span{
+      padding: 0.1rem .4rem;
+      min-width: 90px;
+      max-width: 90px;
+      font-size: .85rem;
+
+      span {
         display: block;
         overflow: hidden;
       }
     }
 
-    .points{
+    .points {
       position: absolute;
       right: 0;
       top: 0;
@@ -168,6 +172,7 @@ body,
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+
     @media screen and (max-width: 1160px) {
       flex-basis: 85%;
     }
@@ -175,7 +180,8 @@ body,
     @media screen and (max-width: 500px) {
       flex-basis: 100%;
     }
-    > div {
+
+    >div {
       box-sizing: border-box;
       margin: 10px;
       min-height: 258px;
@@ -189,7 +195,7 @@ body,
 
       &:hover {
         transform-origin: 100%;
-        transform: translateY(-10px) rotateZ(-0.5deg);
+        transform: translateY(-10px) rotateZ(-1deg);
       }
     }
   }
@@ -205,5 +211,13 @@ body,
     font-size: 0.95rem;
     transition: transform 0.3s ease-in-out, transform-origin 0.4s ease-in-out, margin 0.6s ease-in-out,
       margin-top 0.1s ease-out;
+  }
+}
+
+.app-modal {
+  .modal-card {
+    @media screen and (max-width: 768px) {
+      width: 90%
+    }
   }
 }
