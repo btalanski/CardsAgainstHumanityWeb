@@ -1,0 +1,7 @@
+node_modules/*
+src/
+etc/
+npm-debug.log
+package-lock.json
+README.node_moduleswebpack.config.js
+webpack/

@@ -27,7 +27,25 @@ No tests implemented yet.
 
 ## Deployment
 
-No deployment instructions yet.
+Deploying to Google Cloud
+
+- Create a project on Google Cloud and configure your gcloud SDK
+
+Run the command to list projects
+```
+gcloud projects list
+```
+
+Run the command to select the project
+```
+gcloud config set project `PROJECT_ID`
+```
+
+Deploy with 
+```
+gcloud app deploy
+```
+
 
 ## Built With
 
