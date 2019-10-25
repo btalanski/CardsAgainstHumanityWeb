@@ -7,11 +7,12 @@ import { SetupOverlay } from "./setupOverlay";
 import { PlayerDeck } from "./playerDeck";
 import { Title, TitleBar } from "./titleBar";
 import { SocketContext } from "./socketContext";
+import { mockState } from "../utils/mockState";
 
 export class Main extends Component {
     constructor(props) {
         super(props);
-        this.state = this.defaultState;
+        this.state = mockState;
         this.registerListeners();
     }
 
@@ -23,7 +24,7 @@ export class Main extends Component {
         playerState: null,
         playersState: [],
         chatState: [],
-        showDebug: false,
+        showDebug: true,
         showSetupOverlay: false,
     }
 
