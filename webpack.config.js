@@ -117,7 +117,7 @@ module.exports = mode => {
     const defaults = {
         mode,
         devServerPort: config.get("devServerPort"),
-        host: config.get("host"),
+        host: config.get("hostName"),
         protocol: config.get("protocol"),
     };
 
