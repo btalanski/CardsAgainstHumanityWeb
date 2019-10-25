@@ -12,8 +12,8 @@ import { mockState } from "../utils/mockState.js";
 export class Main extends Component {
     constructor(props) {
         super(props);
-        // this.state = this.defaultState;
-        this.state = mockState;
+        this.state = this.defaultState;
+        // this.state = mockState;
         this.registerListeners();
     }
 

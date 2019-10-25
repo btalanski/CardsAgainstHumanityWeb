@@ -4,7 +4,7 @@ import { App } from "./js/components/App";
 import { SocketContext } from "./js/components/socketContext";
 import io from 'socket.io-client';
 
-const socket = io("http://localhost:8080");
+const socket = io(window['socketServer'] || undefined);
 
 const Main = () => {
     return <SocketContext.Provider value={socket}>
