@@ -3,7 +3,9 @@ import {h, render} from "preact";
 export const renderPlayers = (players) => {
     const list = players.map(({ nickName = "", portrait = "" }) =>
         (<li>
-            <img src={portrait} alt={`${{ nickName }}_avatar`} />
+            <div class="img-frame">
+                <img src={portrait} alt={`${{ nickName }}_avatar`} />
+            </div>
             <span>{nickName}</span>
         </li>)
     );

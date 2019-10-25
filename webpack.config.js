@@ -1,4 +1,6 @@
 const path = require('path');
+global.appRoot = path.resolve(__dirname);
+
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ManifestPlugin = require('webpack-manifest-plugin');

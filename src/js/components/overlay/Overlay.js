@@ -22,6 +22,10 @@ export class Overlay extends Component {
         return null;
     }
 
+    componentWillUnmount(){
+        this.$html.classList.remove("is-clipped");
+    }
+
     $html = document.getElementsByTagName("html")[0];
 
     onMount = () => {

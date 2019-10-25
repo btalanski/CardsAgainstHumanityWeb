@@ -4,7 +4,7 @@ import { Chat } from "./chat";
 import { PlayersList } from "./playersList";
 import { Debugger } from "./debugger";
 import { SetupOverlay } from "./setupOverlay";
-import { PlayerDeck } from "./playersList";
+import { PlayerDeck } from "./playerDeck";
 import { Title, TitleBar } from "./titleBar";
 import { SocketContext } from "./socketContext";
 
@@ -23,7 +23,7 @@ export class Main extends Component {
         playerState: null,
         playersState: [],
         chatState: [],
-        showDebug: true,
+        showDebug: false,
         showSetupOverlay: false,
     }
 
@@ -32,6 +32,7 @@ export class Main extends Component {
             <TitleBar><Title size="4">Cards Against Humanity</Title></TitleBar>
             {this.renderSetupOverlay()}
             {this.renderPlayersList()}
+            {this.renderPlayerDeck()}
             {this.renderDebugger()}
         </div>
     }
@@ -41,7 +42,6 @@ export class Main extends Component {
             console.log("initial_game_data", gameState);
             this.setState((state) => {
                 return {
-                    ...state,
                     gameState,
                     chatState,
                     gameStateLoaded: true,
@@ -53,8 +53,8 @@ export class Main extends Component {
             console.log("player_data", playerState);
             this.setState((state) => {
                 return {
-                    ...state,
                     playerState,
+                    gameStateLoaded: true,
                 };
             })
         });
@@ -63,8 +63,8 @@ export class Main extends Component {
             console.log("game_data", gameState);
             this.setState((state) => {
                 return {
-                    ...state,
                     gameState,
+                    gameStateLoaded: true,
                 };
             })
         });
@@ -73,7 +73,7 @@ export class Main extends Component {
             console.log("chat_data", msg);
             this.setState((state) => {
                 const chatState = [...state.chatState, msg];
-                return { ...state, chatState };
+                return { chatState };
             });
         });
 
@@ -90,11 +90,10 @@ export class Main extends Component {
     }
 
     renderPlayersList = () => {
-        const { gameStateLoaded = false } = this.state;
-
-        if (gameStateLoaded) {
+        const { gameStateLoaded = false, gameState } = this.state;
+        if (gameStateLoaded && gameState) {
             const { gameState: { players = [] } } = this.state;
-            return <PlayersList players={players} />
+            return <PlayersList {...{ players }} />
         }
         return null;
     }
@@ -119,6 +118,17 @@ export class Main extends Component {
         return !gameState
             ? <SetupOverlay isVisible={true} onSubmit={this.submitPlayerInfo} />
             : null;
+    }
+
+    renderPlayerDeck = () => {
+        const { gameStateLoaded = false } = this.state;
+
+        if (gameStateLoaded) {
+            const { cards } = this.state.playerState;
+            return <PlayerDeck {...{ cards }}></PlayerDeck>
+        }
+
+        return null;
     }
 
     toggleChat = () => {

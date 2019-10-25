@@ -1,7 +1,10 @@
 const answerCards = require("./data/answerCards");
 const questionCards = require("./data/questionCards");
 const randomColor = require('randomcolor');
-const shuffle = require('shuffle-array');
+const shuffle = require('lodash/shuffle');
+const take = require('lodash/take');
+
+
 const uid = require('uid');
 
 const defaultState = {
@@ -65,7 +68,8 @@ const server = (io) => {
         ...defaultChatState,
     }
 
-    let roundCards = shuffle([...answerCards]);
+    let roundCard = shuffle([...questionCards]);
+    let roundDeck = shuffle([...answerCards]);
 
     io.on('connection', function (socket) {
         console.log('user connected to session');
@@ -82,6 +86,7 @@ const server = (io) => {
                 socketId: socket.id,
                 color: randomColor({ luminosity: "dark" }),
                 portrait: shuffle(portraits, { copy: true })[0],
+                cards: take([...shuffle([...answerCards])], 10),
             };
 
             gameState.players.push(player);

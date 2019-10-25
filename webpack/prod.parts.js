@@ -1,12 +1,13 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const merge = require('webpack-merge');
+const path = require('path');
 
 const prodConfig = (config) => {
     return merge([{
         output: {
             filename: 'app.js',
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(appRoot, 'dist'),
             publicPath: "dist"
         },
         plugins: [

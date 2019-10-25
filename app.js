@@ -4,10 +4,11 @@ const config = require('config');
 
 fastify.register(require('fastify-static'), {
     root: path.join(__dirname, 'dist'),
+    prefix: '/dist/',
 });
 
 fastify.get('/', function (req, reply) {
-    reply.sendFile('index.html')
+    reply.sendFile('index.html');
 });
 
 const start = () => {

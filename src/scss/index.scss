@@ -6,7 +6,8 @@ $radius: 0px;
 html,
 body,
 .app {
-  height: 100%;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .app {
@@ -34,8 +35,8 @@ body,
   text-align: center;
   display: flex;
   flex-flow: row;
-  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.33), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  // margin-bottom: 1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.33), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 1rem;
 
   .title {
     flex-grow: 1;
@@ -89,11 +90,21 @@ body,
     align-items: center;
     margin-bottom: 0.85rem;
 
-    img {
+    .img-frame {
       width: 65px;
       height: 65px;
-      border-radius: 4rem;
+      position: relative;
+      overflow: hidden;
+      border-radius: 50%;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.33), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+      > img {
+        display: inline;
+        margin: 0 auto;
+        margin-left: 0;
+        height: 100%;
+        width: auto;
+      }
     }
 
     span {
@@ -106,24 +117,51 @@ body,
 }
 
 .playerDeck {
+  display: flex;
+
   .deck {
-    overflow: auto;
-    white-space: nowrap;
+    flex-basis: 55%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    @media screen and (max-width: 1160px) {
+      flex-basis: 85%;
+    }
+
+    @media screen and (max-width: 500px) {
+      flex-basis: 100%;
+    }
+    > div {
+      box-sizing: border-box;
+      margin: 10px;
+      min-height: 258px;
+      height: 258px;
+      min-width: 185px;
+      width: 185px;
+      position: relative;
+      cursor: pointer;
+      transform-origin: 40% 50%;
+      perspective: 500px;
+
+      &:hover {
+        transform-origin: 100%;
+        transform: translateY(-10px) rotateZ(-0.5deg);
+      }
+    }
   }
 
   .deckCard {
+    box-sizing: border-box;
     background: #fff;
     color: #000;
-    width: 200px;
-    border-radius: 0.5rem;
-    min-width: 200px;
-    padding: 1rem;
-    font-weight: bolder;
-    min-height: 200px;
-    margin: 0 0.5rem;
-    line-height: 200px;
-    text-align: center;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.33), 0 1px 0px 0 rgba(0, 0, 0, 0.19);
-    display: inline-block;
+    border-radius: 0.6rem;
+    padding: 1.2rem;
+    font-weight: bold;
+    text-align: left;
+    font-size: 0.95rem;
+    transition: transform 0.3s ease-in-out, transform-origin 0.4s ease-in-out, margin 0.6s ease-in-out,
+      margin-top 0.1s ease-out;
   }
 }

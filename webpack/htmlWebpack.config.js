@@ -6,7 +6,7 @@ const plugin = (config) => {
         inject: false,
         appMountId: 'app',
         template: require('html-webpack-template'),
-        baseHref: host,
+        // baseHref: host,
         meta: [],
         mobile: true,
         lang: 'pt-BR',
