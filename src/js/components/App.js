@@ -7,13 +7,14 @@ import { SetupOverlay } from "./setupOverlay";
 import { PlayerDeck } from "./playerDeck";
 import { Title, TitleBar } from "./titleBar";
 import { SocketContext } from "./socketContext";
-import { mockState } from "../utils/mockState";
+import { mockState } from "../utils/mockState.js";
 
 export class Main extends Component {
     constructor(props) {
         super(props);
         this.state = mockState;
         this.registerListeners();
+        console.log(this.state);
     }
 
     socket = this.props.socket;
@@ -94,7 +95,7 @@ export class Main extends Component {
         const { gameStateLoaded = false, gameState } = this.state;
         if (gameStateLoaded && gameState) {
             const { gameState: { players = [] } } = this.state;
-            return <PlayersList {...{ players }} />
+            return <PlayersList {...{ players }} ></PlayersList>
         }
         return null;
     }

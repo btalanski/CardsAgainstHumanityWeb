@@ -26,6 +26,7 @@ const defaultPlayerState = {
     cards: [],
     selectedCards: [],
     socketId: null,
+    points: 0,
 };
 
 const defaultChatState = {
