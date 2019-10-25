@@ -82,7 +82,7 @@ const commonConfig = merge([{
     }
 }]);
 
-const prodConfig = (config) => require("./webpack/prod.parts.js")(config);
+// const prodConfig = (config) => require("./webpack/prod.parts.js")(config);
 
 const devConfig = (config) => {
     return merge([{
@@ -104,7 +104,7 @@ const devConfig = (config) => {
             //
             // 0.0.0.0 is available to all network devices
             // unlike default `localhost`.
-            host: process.env.HOST, // Defaults to `localhost`
+            host: config.host, // Defaults to `localhost`
             port: config.devServerPort,
             open: true, // Open the page in browser,
             historyApiFallback: true, // If you are using HTML5 History API based routing
@@ -117,14 +117,15 @@ module.exports = mode => {
     const defaults = {
         mode,
         devServerPort: config.get("devServerPort"),
-        host: "http://localhost:8080",
+        host: config.get("host"),
+        protocol: config.get("protocol"),
     };
 
     if (mode === "production") {
         return merge(
             commonConfig,
             commonPluginsConfig,
-            prodConfig(defaults),
+            require("./webpack/prod.parts.js")(defaults),
             { mode }
         );
     }
