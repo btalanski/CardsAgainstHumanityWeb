@@ -9,7 +9,7 @@ export const mockState = {
                 "selectedCards": [],
                 "socketId": "1t9AjvsdSKgvVvBSAAAB",
                 "points": 100,
-                "nickName": "Brunooooo"
+                "nickName": "Player 1"
             },
             {
                 "id": "tou0np27",
@@ -18,7 +18,7 @@ export const mockState = {
                 "isRoundLeader": false,
                 "selectedCards": [],
                 "socketId": "1t9AjvsdSKgvVvBSAAAB",
-                "nickName": "Bruno",
+                "nickName": "Player 2",
                 "points": 10,
             },
             {
@@ -28,7 +28,7 @@ export const mockState = {
                 "isRoundLeader": false,
                 "selectedCards": [],
                 "socketId": "1t9AjvsdSKgvVvBSAAAB",
-                "nickName": "Bruno",
+                "nickName": "Player 3",
                 "points": 0,
             },
             {
@@ -38,7 +38,7 @@ export const mockState = {
                 "isRoundLeader": false,
                 "selectedCards": [],
                 "socketId": "1t9AjvsdSKgvVvBSAAAB",
-                "nickName": "Bruno",
+                "nickName": "Player 4",
                 "points": 0,
             },
             {
@@ -48,37 +48,7 @@ export const mockState = {
                 "isRoundLeader": false,
                 "selectedCards": [],
                 "socketId": "1t9AjvsdSKgvVvBSAAAB",
-                "nickName": "Bruno",
-                "points": 0,
-            },
-            {
-                "id": "tou0np76",
-                "color": "#3b6b02",
-                "portrait": "https://i.pinimg.com/564x/68/52/e7/6852e79e123a58e0fdc36ddca43691c1.jpg",
-                "isRoundLeader": false,
-                "selectedCards": [],
-                "socketId": "1t9AjvsdSKgvVvBSAAAB",
-                "nickName": "Bruno",
-                "points": 0,
-            },
-            {
-                "id": "tou0np77",
-                "color": "#3b6b02",
-                "portrait": "https://i.pinimg.com/564x/68/52/e7/6852e79e123a58e0fdc36ddca43691c1.jpg",
-                "isRoundLeader": false,
-                "selectedCards": [],
-                "socketId": "1t9AjvsdSKgvVvBSAAAB",
-                "nickName": "Bruno",
-                "points": 0,
-            },
-            {
-                "id": "tou0np78",
-                "color": "#3b6b02",
-                "portrait": "https://i.pinimg.com/564x/68/52/e7/6852e79e123a58e0fdc36ddca43691c1.jpg",
-                "isRoundLeader": false,
-                "selectedCards": [],
-                "socketId": "1t9AjvsdSKgvVvBSAAAB",
-                "nickName": "Bruno",
+                "nickName": "Player 5",
                 "points": 0,
             },
         ],
@@ -141,6 +111,6 @@ export const mockState = {
             "style": "bold"
         }
     ],
-    "showDebug": true,
+    "showDebug": false,
     "showSetupOverlay": false
 };
