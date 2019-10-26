@@ -8,6 +8,7 @@ import { PlayerDeck } from "./playerDeck";
 import { Title, TitleBar } from "./titleBar";
 import { SocketContext } from "./socketContext";
 import { mockState } from "../utils/mockState.js";
+import { SOCKET_EVENTS, GAME_STATE } from "../constants";
 
 export class Main extends Component {
     constructor(props) {
@@ -24,7 +25,6 @@ export class Main extends Component {
         gameStateLoaded: false,
         playerState: null,
         playersState: [],
-        chatState: [],
         showDebug: true,
         showSetupOverlay: true,
         connected: false,
@@ -41,17 +41,35 @@ export class Main extends Component {
     }
 
     registerListeners = () => {
-        this.socket.on('connect', () => {
-            console.log("connected");
+        this.socket.on(SOCKET_EVENTS.CONNECT, () => {
+            console.log(SOCKET_EVENTS.CONNECT);
             this.setState((state) => {
                 return {
                     connected: true,
                 };
-            })
+            });
         });
 
-        this.socket.on('GAME_UPDATE', ({ player, otherPlayers, gameState }) => {
-            console.log("GAME_UPDATE");
+        this.socket.on(SOCKET_EVENTS.RECONNECT, () => {
+            console.log(SOCKET_EVENTS.RECONNECT);
+            this.setState((state) => {
+                return {
+                    connected: true,
+                };
+            });
+        });
+
+        this.socket.on(SOCKET_EVENTS.DISCONNECT, () => {
+            console.log(SOCKET_EVENTS.DISCONNECT);
+            this.setState((state) => {
+                return {
+                    connected: false,
+                };
+            });
+        });
+
+        this.socket.on(SOCKET_EVENTS.GAME_UPDATE, ({ player, otherPlayers, gameState }) => {
+            console.log(SOCKET_EVENTS.GAME_UPDATE);
             this.setState(() => {
                 return {
                     gameState,
@@ -97,9 +115,9 @@ export class Main extends Component {
     }
 
     renderSetupOverlay = () => {
-        const { showSetupOverlay, connected } = this.state;
-
-        return showSetupOverlay && connected
+        const { showSetupOverlay, connected, gameStateLoaded } = this.state;
+        const show = showSetupOverlay && connected && !gameStateLoaded;
+        return show
             ? <SetupOverlay isVisible={true} onSubmit={this.submitPlayerInfo} />
             : null;
     }
@@ -126,6 +144,7 @@ export class Main extends Component {
     submitPlayerInfo = (data) => {
         console.log(data);
         this.socket.emit("PLAYER_JOIN", data);
+        console.log("PLAYER_JOIN", data);
         this.setState(() => ({ showSetupOverlay: false }));
     }
 }

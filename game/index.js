@@ -14,9 +14,15 @@ module.exports = (io) => {
         });
 
         // On player disconnect
+        socket.on(Constants.SOCKET_EVENTS.RECONNECT, (reason) => {
+            console.log(Constants.SOCKET_EVENTS.RECONNECT);
+            gameInstance.addPlayer(socket);
+        });
+
+        // On player disconnect
         socket.on(Constants.SOCKET_EVENTS.DISCONNECT, (reason) => {
             console.log(Constants.SOCKET_EVENTS.DISCONNECT);
-            gameInstance.addPlayer(socket);
+            gameInstance.removePlayer(socket);
         });
     });
 };

@@ -9,12 +9,18 @@ class Deck {
         this.answerCards = shuffle([...answerCards]);
     }
 
-    pullQuestion = () => {
+    pullQuestion() {
 
     }
 
-    pullAnswer = (total) => {
-
+    pullCards(total) {
+        return this.answerCards.reduce((hand, card, i) => {
+            if (i <= total) {
+                const selectedCard = this.answerCards.pop();
+                hand.push(selectedCard);
+            }
+            return hand;
+        }, []);
     }
 }
 
