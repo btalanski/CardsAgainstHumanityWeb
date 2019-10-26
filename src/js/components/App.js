@@ -25,8 +25,9 @@ export class Main extends Component {
         playerState: null,
         playersState: [],
         chatState: [],
-        showDebug: false,
-        showSetupOverlay: false,
+        showDebug: true,
+        showSetupOverlay: true,
+        connected: false,
     }
 
     render(props, state) {
@@ -40,43 +41,25 @@ export class Main extends Component {
     }
 
     registerListeners = () => {
-        this.socket.on('initial_game_data', ({ gameState, chatState }) => {
-            console.log("initial_game_data", gameState);
+        this.socket.on('connect', () => {
+            console.log("connected");
             this.setState((state) => {
+                return {
+                    connected: true,
+                };
+            })
+        });
+
+        this.socket.on('GAME_UPDATE', ({ player, otherPlayers, gameState }) => {
+            console.log("GAME_UPDATE");
+            this.setState(() => {
                 return {
                     gameState,
-                    chatState,
+                    playerState: player,
+                    playersState: otherPlayers,
                     gameStateLoaded: true,
                 };
             })
-        });
-
-        this.socket.on('player_data', playerState => {
-            console.log("player_data", playerState);
-            this.setState((state) => {
-                return {
-                    playerState,
-                    gameStateLoaded: true,
-                };
-            })
-        });
-
-        this.socket.on('game_data', gameState => {
-            console.log("game_data", gameState);
-            this.setState((state) => {
-                return {
-                    gameState,
-                    gameStateLoaded: true,
-                };
-            })
-        });
-
-        this.socket.on('chat_data', (msg) => {
-            console.log("chat_data", msg);
-            this.setState((state) => {
-                const chatState = [...state.chatState, msg];
-                return { chatState };
-            });
         });
 
         // this.socket.on('disconnect', (reason) => {
@@ -92,10 +75,9 @@ export class Main extends Component {
     }
 
     renderPlayersList = () => {
-        const { gameStateLoaded = false, gameState } = this.state;
-        if (gameStateLoaded && gameState) {
-            const { gameState: { players = [] } } = this.state;
-            return <PlayersList {...{ players }} ></PlayersList>
+        const { gameStateLoaded = false, playersState = [] } = this.state;
+        if (gameStateLoaded && playersState.length > 0) {
+            return <PlayersList {...{ players: playersState }} ></PlayersList>
         }
         return null;
     }
@@ -115,9 +97,9 @@ export class Main extends Component {
     }
 
     renderSetupOverlay = () => {
-        const { gameState } = this.state;
+        const { showSetupOverlay, connected } = this.state;
 
-        return !gameState
+        return showSetupOverlay && connected
             ? <SetupOverlay isVisible={true} onSubmit={this.submitPlayerInfo} />
             : null;
     }
@@ -143,7 +125,8 @@ export class Main extends Component {
 
     submitPlayerInfo = (data) => {
         console.log(data);
-        this.socket.emit("player_join", data);
+        this.socket.emit("PLAYER_JOIN", data);
+        this.setState(() => ({ showSetupOverlay: false }));
     }
 }
 
