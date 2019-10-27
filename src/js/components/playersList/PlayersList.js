@@ -1,4 +1,4 @@
-import {h, render} from "preact";
+import { h, render } from "preact";
 
 export const renderPlayers = (players) => {
     const list = players.map(({ name = "", portrait = "", id = "", points = 0 }) =>

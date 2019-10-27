@@ -64,7 +64,7 @@ body,
   }
 
   .form {
-    >* {
+    > * {
       border-radius: 0 !important;
     }
   }
@@ -117,7 +117,7 @@ body,
       box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.33), 0 0px 15px 0 rgba(0, 0, 0, 0.19);
       margin: auto;
 
-      >img {
+      > img {
         display: inline;
         margin: 0 auto;
         margin-left: 0;
@@ -131,12 +131,12 @@ body,
       font-weight: bold;
       flex-basis: 100%;
       background: #222;
-      margin-top: .5rem;
+      margin-top: 0.5rem;
       text-align: center;
-      padding: 0.1rem .4rem;
+      padding: 0.1rem 0.4rem;
       min-width: 90px;
       max-width: 90px;
-      font-size: .85rem;
+      font-size: 0.85rem;
 
       span {
         display: block;
@@ -162,6 +162,66 @@ body,
   }
 }
 
+.flex-wrapper {
+  display: flex;
+}
+
+.aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aligner-item {
+  &.top {
+    align-self: flex-start;
+  }
+
+  &.bottom {
+    align-self: flex-end;
+  }
+}
+
+.waiting-screen {
+  flex-basis: 55%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+
+  @media screen and (max-width: 1160px) {
+    flex-basis: 85%;
+  }
+}
+
+.question {
+  flex-basis: 52.5%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: #222;
+  padding: 2rem;
+  border-radius: 0.6rem;
+  margin: 1.5rem auto;
+  @media screen and (max-width: 1160px) {
+    flex-basis: 82.5%;
+  }
+
+  h1 {
+    color: #fff;
+  }
+}
+
+.clock{
+  flex-grow: 1;
+  background: #ccc;
+}
+
 .playerDeck {
   display: flex;
 
@@ -181,7 +241,7 @@ body,
       flex-basis: 100%;
     }
 
-    >div {
+    > div {
       box-sizing: border-box;
       margin: 10px;
       min-height: 258px;
@@ -217,7 +277,7 @@ body,
 .app-modal {
   .modal-card {
     @media screen and (max-width: 768px) {
-      width: 90%
+      width: 90%;
     }
   }
 }

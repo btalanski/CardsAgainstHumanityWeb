@@ -26,7 +26,7 @@ export class UserForm extends Component {
                     <input class="input" type="text" placeholder="" value={this.state.nickName} onChange={this.handleChange} maxLength={10} required={true}/>
                 </div>
             </div>
-            <input class="button is-success" type="submit" value="Entrar!" />
+            <input class="button is-black" type="submit" value="Entrar!" />
         </form>
     }
 }

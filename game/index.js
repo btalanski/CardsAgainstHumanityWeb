@@ -13,7 +13,7 @@ module.exports = (io) => {
             gameInstance.addPlayer(socket, data);
         });
 
-        // On player disconnect
+        // On player reconnect
         socket.on(Constants.SOCKET_EVENTS.RECONNECT, (reason) => {
             console.log(Constants.SOCKET_EVENTS.RECONNECT);
             gameInstance.addPlayer(socket);
@@ -23,6 +23,12 @@ module.exports = (io) => {
         socket.on(Constants.SOCKET_EVENTS.DISCONNECT, (reason) => {
             console.log(Constants.SOCKET_EVENTS.DISCONNECT);
             gameInstance.removePlayer(socket);
+        });
+
+        // On ready to start round
+        socket.on(Constants.SOCKET_EVENTS.READY_TO_START, () => {
+            console.log(Constants.SOCKET_EVENTS.READY_TO_START);
+            gameInstance.setReadyToStart();
         });
     });
 };

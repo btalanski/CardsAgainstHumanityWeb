@@ -1,6 +1,8 @@
 const CONSTANTS = require("../consts");
 const PlayerClass = require("./player");
-const DeckClass = require("./deck");
+const AnswersDeck = require("./answersDeck");
+const QuestionsDeck = require("./questionDeck");
+
 
 class Game {
     constructor() {
@@ -8,13 +10,15 @@ class Game {
         this.players = {};
         this.playersWaiting = {};
         this.gameState = CONSTANTS.GAME_STATES.IDLE;
-        this.minRequiredPlayers = 3;
+        this.minRequiredPlayers = 2;
         this.maxAllowedPlayers = 8;
         this.currentPlayers = 0;
+        this.readyToStart = false;
         this.defaultTurnTimeoutSeconds = 60;
         this.defaultTimeoutSeconds = 5;
         this.defaultRoundTimeInSeconds = 30;
         this.defaultRoundVoteTimeInSeconds = 30;
+        this.defaultNextRoundTimeInSeconds = 30;
         this.maxNumberOfRounds = null;
         this.roundsCount = null;
         this.roundQuestion = null;
@@ -28,24 +32,31 @@ class Game {
     }
 
     update() {
-        // console.log("Game tick ", Date.now());
-        const currentPlayers = Object.keys(this.sockets).length;
+        this.currentPlayers = Object.keys(this.players).length;
 
-        if (currentPlayers > 0 && this.gameState === CONSTANTS.GAME_STATES.IDLE) {
+        if (this.currentPlayers === 0 && this.gameState !== CONSTANTS.GAME_STATES.IDLE) {
+            this.resetGameState();
+            this.shouldSendUpdate = true;
+        }
+
+        if (this.currentPlayers > 0 && this.gameState === CONSTANTS.GAME_STATES.IDLE) {
             this.gameState = CONSTANTS.GAME_STATES.WAITING_FOR_PLAYERS;
             this.shouldSendUpdate = true;
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.IDLE) {
+            this.shouldSendUpdate = false;
             return;
         }
 
-        if (currentPlayers >= this.minRequiredPlayers && this.gameState === CONSTANTS.GAME_STATES.WAITING_FOR_PLAYERS) {
+        if (this.currentPlayers >= this.minRequiredPlayers && this.gameState === CONSTANTS.GAME_STATES.WAITING_FOR_PLAYERS) {
             this.gameState = CONSTANTS.GAME_STATES.WAITING_TO_START;
             this.shouldSendUpdate = true;
         }
 
-        if (currentPlayers >= this.minRequiredPlayers && this.gameState === CONSTANTS.GAME_STATES.WAITING_TO_START) {
+        if (this.currentPlayers >= this.minRequiredPlayers &&
+            this.gameState === CONSTANTS.GAME_STATES.WAITING_TO_START &&
+            this.readyToStart) {
             this.gameState = CONSTANTS.GAME_STATES.ROUND_SETUP;
             this.shouldSendUpdate = true;
         }
@@ -53,7 +64,7 @@ class Game {
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_SETUP) {
             this.setupRound();
             Object.keys(this.players).forEach(playerID => {
-                this.players[playerID].cards = this.roundDeck.pullCards(10);
+                this.players[playerID].cards = this.roundDeck.pullCard(10);
             });
             this.gameState = CONSTANTS.GAME_STATES.ROUND_START;
             this.shouldSendUpdate = true;
@@ -70,11 +81,11 @@ class Game {
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_START &&
             this.roundTimerInterval &&
             this.roundTimer >= this.defaultRoundTimeInSeconds) {
-                this.roundTimer = 0;
-                clearInterval(this.roundTimerInterval);
-                this.roundTimerInterval = null;
-                this.gameState = CONSTANTS.GAME_STATES.ROUND_VOTE;
-                this.shouldSendUpdate = true;
+            this.roundTimer = 0;
+            clearInterval(this.roundTimerInterval);
+            this.roundTimerInterval = null;
+            this.gameState = CONSTANTS.GAME_STATES.ROUND_VOTE;
+            this.shouldSendUpdate = true;
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_VOTE && !this.roundTimerInterval) {
@@ -88,11 +99,37 @@ class Game {
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_VOTE &&
             this.roundTimerInterval &&
             this.roundTimer >= this.defaultRoundVoteTimeInSeconds) {
-                this.roundTimer = 0;
-                clearInterval(this.roundTimerInterval);
-                this.roundTimerInterval = null;
-                this.gameState = CONSTANTS.GAME_STATES.ROUND_END;
+            this.roundTimer = 0;
+            clearInterval(this.roundTimerInterval);
+            this.roundTimerInterval = null;
+            this.gameState = CONSTANTS.GAME_STATES.ROUND_END;
+            this.shouldSendUpdate = true;
+        }
+
+        if (this.gameState === CONSTANTS.GAME_STATES.ROUND_END) {
+            // Process round result
+            // Find round winner
+            // Add score to round winner
+            this.gameState = CONSTANTS.GAME_STATES.NEXT_ROUND;
+            this.shouldSendUpdate = true;
+        }
+
+        if (this.gameState === CONSTANTS.GAME_STATES.NEXT_ROUND && !this.roundTimerInterval) {
+            this.roundTimer = 0;
+            this.roundTimerInterval = setInterval(() => {
+                this.roundTimer++;
                 this.shouldSendUpdate = true;
+            }, 1000);
+        }
+
+        if (this.gameState === CONSTANTS.GAME_STATES.NEXT_ROUND &&
+            this.roundTimerInterval &&
+            this.roundTimer >= this.defaultNextRoundTimeInSeconds) {
+            this.roundTimer = 0;
+            clearInterval(this.roundTimerInterval);
+            this.roundTimerInterval = null;
+            this.gameState = CONSTANTS.GAME_STATES.ROUND_SETUP;
+            this.shouldSendUpdate = true;
         }
 
         if (this.shouldSendUpdate) {
@@ -117,17 +154,41 @@ class Game {
         const hasPlayers = Object.keys(this.sockets).length > 0;
         this.sockets[socketId] = socket;
         this.players[socketId] = new PlayerClass({ id: socketId, isHost: !hasPlayers, name: nickName });
+        this.currentPlayers = Object.keys(this.players).length;
         this.shouldSendUpdate = true;
     }
 
     removePlayer(socket) {
         delete this.sockets[socket.id];
         delete this.players[socket.id];
+        this.currentPlayers = Object.keys(this.players).length;
         this.shouldSendUpdate = true;
     }
 
+    setReadyToStart(){
+        this.readyToStart = true;
+        this.shouldSendUpdate = true;
+    }
+
+    resetGameState(){
+        this.sockets = {};
+        this.players = {};
+        this.gameState = CONSTANTS.GAME_STATES.IDLE;
+        this.readyToStart = false;
+        this.roundsCount = null;
+        this.roundQuestion = null;
+        this.roundDeck = null;
+        this.roundTimer = null;
+        clearInterval(this.roundTimerInterval);
+        this.roundTimerInterval = null;
+        this.roundSelectedCards = null;
+    }
+
     setupRound() {
-        this.roundDeck = new DeckClass();
+        this.roundDeck = new AnswersDeck();
+
+        const deck = new QuestionsDeck();
+        this.roundQuestion = deck.pullCard(1)[0];
     }
 
     createUpdate(player) {
@@ -143,6 +204,8 @@ class Game {
                 roundQuestion: this.roundQuestion,
                 roundSelectedCards: this.roundSelectedCards,
                 roundTimer: this.roundTimer,
+                currentPlayers: this.currentPlayers,
+                minRequiredPlayers: this.minRequiredPlayers,
             }
         };
     }

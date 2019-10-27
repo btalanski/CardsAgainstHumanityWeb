@@ -1,22 +1,19 @@
-const answerCards = require("../cards/answerCards");
-const questionCards = require("../cards/questionCards");
 const shuffle = require('lodash/shuffle');
-const take = require('lodash/take');
 
 class Deck {
-    constructor() {
-        this.questionCards = shuffle([...questionCards]);
-        this.answerCards = shuffle([...answerCards]);
+    constructor(cards = []) {
+        this.cards = cards;
+        this.shuffle();
     }
 
-    pullQuestion() {
-
+    shuffle(){
+        this.cards = shuffle(this.cards);
     }
 
-    pullCards(total) {
-        return this.answerCards.reduce((hand, card, i) => {
-            if (i <= total) {
-                const selectedCard = this.answerCards.pop();
+    pullCard(total) {
+        return this.cards.reduce((hand, card, i) => {
+            if (i <= total - 1) {
+                const selectedCard = this.cards.pop();
                 hand.push(selectedCard);
             }
             return hand;

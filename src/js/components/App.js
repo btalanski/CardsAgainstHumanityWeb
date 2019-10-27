@@ -6,6 +6,8 @@ import { Debugger } from "./debugger";
 import { SetupOverlay } from "./setupOverlay";
 import { PlayerDeck } from "./playerDeck";
 import { Title, TitleBar } from "./titleBar";
+import { WaitingScreen } from "./waitingScreen";
+import { Game } from "./game";
 import { SocketContext } from "./socketContext";
 import { mockState } from "../utils/mockState.js";
 import { SOCKET_EVENTS, GAME_STATE } from "../constants";
@@ -35,7 +37,8 @@ export class Main extends Component {
             <TitleBar><Title size="4">Cards Against Humanity</Title></TitleBar>
             {this.renderSetupOverlay()}
             {this.renderPlayersList()}
-            {this.renderPlayerDeck()}
+            {this.renderWaitingScreen()}
+            {this.renderGameBoard()}
             {this.renderDebugger()}
         </div>
     }
@@ -92,6 +95,24 @@ export class Main extends Component {
         // });
     }
 
+    gameReady = () => {
+        const { connected, gameStateLoaded, gameState, showSetupOverlay } = this.state;
+        return connected && gameStateLoaded && gameState && !showSetupOverlay;
+    }
+
+    gameStarted = (state) => {
+        const startedStates = [
+            GAME_STATE.ROUND_SETUP,
+            GAME_STATE.ROUND_START,
+            GAME_STATE.ROUND_VOTE,
+            GAME_STATE.ROUND_VOTE_RESULT,
+            GAME_STATE.ROUND_END,
+            GAME_STATE.NEXT_ROUND,
+        ];
+
+        return !!startedStates.find(s => s === state);
+    }
+
     renderPlayersList = () => {
         const { gameStateLoaded = false, playersState = [] } = this.state;
         if (gameStateLoaded && playersState.length > 0) {
@@ -122,14 +143,47 @@ export class Main extends Component {
             : null;
     }
 
-    renderPlayerDeck = () => {
-        const { gameStateLoaded = false } = this.state;
+    renderWaitingScreen = () => {
+        if (this.gameReady()) {
+            const { gameState, playerState } = this.state;
+            const { state } = gameState;
 
-        if (gameStateLoaded) {
-            const { cards } = this.state.playerState;
-            return <PlayerDeck {...{ cards }}></PlayerDeck>
+            if (state === GAME_STATE.WAITING_FOR_PLAYERS || state === GAME_STATE.WAITING_TO_START) {
+                const { currentPlayers, minRequiredPlayers } = gameState;
+                const { isHost } = playerState;
+
+                const props = {
+                    currentPlayers,
+                    minRequiredPlayers,
+                    readyToStart: state === GAME_STATE.WAITING_TO_START,
+                    isHost,
+                    onStart: this.submitReadyToStart,
+                };
+
+                return <WaitingScreen {...props}></WaitingScreen>
+            }
         }
+        return null;
+    }
 
+    submitReadyToStart = (e) => {
+        e.preventDefault();
+        this.socket.emit(SOCKET_EVENTS.READY_TO_START);
+    }
+
+    renderGameBoard = () => {
+        if (this.gameReady()) {
+            const { connected, gameState, playerState } = this.state;
+            const { state } = gameState;
+
+            if (this.gameStarted(state)) {
+                const props = {
+                    gameState,
+                    playerState,
+                }
+                return <Game {...props}></Game>
+            }
+        }
         return null;
     }
 
@@ -144,7 +198,6 @@ export class Main extends Component {
     submitPlayerInfo = (data) => {
         console.log(data);
         this.socket.emit("PLAYER_JOIN", data);
-        console.log("PLAYER_JOIN", data);
         this.setState(() => ({ showSetupOverlay: false }));
     }
 }
