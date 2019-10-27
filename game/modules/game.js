@@ -110,8 +110,7 @@ class Game {
             // Process round result
             // Find round winner
             // Add score to round winner
-            this.gameState = CONSTANTS.GAME_STATES.NEXT_ROUND;
-            this.shouldSendUpdate = true;
+            this.cleanUpRound();
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.NEXT_ROUND && !this.roundTimerInterval) {
@@ -196,6 +195,18 @@ class Game {
                 this.roundQuestion = card;
             }
         } while (!this.roundQuestion);
+    }
+
+    cleanUpRound() {
+        this.gameState = CONSTANTS.GAME_STATES.NEXT_ROUND;
+        // this.roundQuestion = null;
+        // this.roundDeck = null;
+        // this.roundTimer = null;
+        // clearInterval(this.roundTimerInterval);
+        // this.roundTimerInterval = null;
+        this.roundSelectedCards = [];
+
+        this.shouldSendUpdate = true;
     }
 
     onPlayerSelectedCard(socket, card){

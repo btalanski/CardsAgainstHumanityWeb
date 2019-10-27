@@ -5,7 +5,7 @@ export const VoteDeck = ({ cards = [], onSelect = () => null }) => {
         <div class="deck">
             {cards.map((card, i) => {
                 const { value } = card;
-                return <div key={i} className="deckCard" onClick={() => onSelect(card)}>{value}</div>;
+                return <div key={i} className="deckCard">{value}</div>;
             })}
         </div>
     </div>;
