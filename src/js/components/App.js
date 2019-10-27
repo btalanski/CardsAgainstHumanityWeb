@@ -27,7 +27,7 @@ export class Main extends Component {
         gameStateLoaded: false,
         playerState: null,
         playersState: [],
-        showDebug: true,
+        showDebug: false,
         showSetupOverlay: true,
         connected: false,
     }
