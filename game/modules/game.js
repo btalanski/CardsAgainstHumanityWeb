@@ -25,7 +25,7 @@ class Game {
         this.roundDeck = null;
         this.roundTimer = null;
         this.roundTimerInterval = null;
-        this.roundSelectedCards = null;
+        this.roundSelectedCards = [];
         this.shouldSendUpdate = false;
         // Start game loop
         this.loop = setInterval(() => this.update(), 1000 / 60);
@@ -71,16 +71,16 @@ class Game {
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_START && !this.roundTimerInterval) {
-            this.roundTimer = 0;
+            this.roundTimer = this.defaultRoundTimeInSeconds;
             this.roundTimerInterval = setInterval(() => {
-                this.roundTimer++;
+                this.roundTimer--;
                 this.shouldSendUpdate = true;
             }, 1000);
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_START &&
             this.roundTimerInterval &&
-            this.roundTimer >= this.defaultRoundTimeInSeconds) {
+            this.roundTimer <= 0) {
             this.roundTimer = 0;
             clearInterval(this.roundTimerInterval);
             this.roundTimerInterval = null;
@@ -89,16 +89,16 @@ class Game {
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_VOTE && !this.roundTimerInterval) {
-            this.roundTimer = 0;
+            this.roundTimer = this.defaultRoundVoteTimeInSeconds;
             this.roundTimerInterval = setInterval(() => {
-                this.roundTimer++;
+                this.roundTimer--;
                 this.shouldSendUpdate = true;
             }, 1000);
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.ROUND_VOTE &&
             this.roundTimerInterval &&
-            this.roundTimer >= this.defaultRoundVoteTimeInSeconds) {
+            this.roundTimer <= 0) {
             this.roundTimer = 0;
             clearInterval(this.roundTimerInterval);
             this.roundTimerInterval = null;
@@ -115,16 +115,16 @@ class Game {
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.NEXT_ROUND && !this.roundTimerInterval) {
-            this.roundTimer = 0;
+            this.roundTimer = this.defaultNextRoundTimeInSeconds;
             this.roundTimerInterval = setInterval(() => {
-                this.roundTimer++;
+                this.roundTimer--;
                 this.shouldSendUpdate = true;
             }, 1000);
         }
 
         if (this.gameState === CONSTANTS.GAME_STATES.NEXT_ROUND &&
             this.roundTimerInterval &&
-            this.roundTimer >= this.defaultNextRoundTimeInSeconds) {
+            this.roundTimer <= 0) {
             this.roundTimer = 0;
             clearInterval(this.roundTimerInterval);
             this.roundTimerInterval = null;
@@ -165,12 +165,12 @@ class Game {
         this.shouldSendUpdate = true;
     }
 
-    setReadyToStart(){
+    setReadyToStart() {
         this.readyToStart = true;
         this.shouldSendUpdate = true;
     }
 
-    resetGameState(){
+    resetGameState() {
         this.sockets = {};
         this.players = {};
         this.gameState = CONSTANTS.GAME_STATES.IDLE;
@@ -181,14 +181,35 @@ class Game {
         this.roundTimer = null;
         clearInterval(this.roundTimerInterval);
         this.roundTimerInterval = null;
-        this.roundSelectedCards = null;
+        this.roundSelectedCards = [];
     }
 
     setupRound() {
         this.roundDeck = new AnswersDeck();
 
         const deck = new QuestionsDeck();
-        this.roundQuestion = deck.pullCard(1)[0];
+        this.roundQuestion = null;
+
+        do {
+            const card = deck.pullCard(1)[0];
+            if (card.pick === 1) {
+                this.roundQuestion = card;
+            }
+        } while (!this.roundQuestion);
+    }
+
+    onPlayerSelectedCard(socket, card){
+        const player = this.players[socket.id];
+
+        const selectedCard = {
+            ...card,
+            votes: 0,
+            playerId: player.id,
+            playerName: player.name
+        };
+
+        this.roundSelectedCards.push(selectedCard);
+        this.shouldSendUpdate = true;
     }
 
     createUpdate(player) {

@@ -30,6 +30,7 @@ export class Main extends Component {
         showDebug: false,
         showSetupOverlay: true,
         connected: false,
+        roundCardSelected: false,
     }
 
     render(props, state) {
@@ -73,12 +74,15 @@ export class Main extends Component {
 
         this.socket.on(SOCKET_EVENTS.GAME_UPDATE, ({ player, otherPlayers, gameState }) => {
             console.log(SOCKET_EVENTS.GAME_UPDATE);
-            this.setState(() => {
+            const { state } = gameState;
+
+            this.setState((prevState) => {
                 return {
                     gameState,
                     playerState: player,
                     playersState: otherPlayers,
                     gameStateLoaded: true,
+                    roundCardSelected: state === GAME_STATE.NEXT_ROUND ? false : prevState.roundCardSelected,
                 };
             })
         });
@@ -173,13 +177,15 @@ export class Main extends Component {
 
     renderGameBoard = () => {
         if (this.gameReady()) {
-            const { connected, gameState, playerState } = this.state;
+            const { connected, gameState, playerState, roundCardSelected } = this.state;
             const { state } = gameState;
 
             if (this.gameStarted(state)) {
                 const props = {
                     gameState,
                     playerState,
+                    roundCardSelected: roundCardSelected,
+                    onSelectCard: this.roundCardSelectedCallback,
                 }
                 return <Game {...props}></Game>
             }
@@ -197,8 +203,13 @@ export class Main extends Component {
 
     submitPlayerInfo = (data) => {
         console.log(data);
-        this.socket.emit("PLAYER_JOIN", data);
+        this.socket.emit(SOCKET_EVENTS.PLAYER_JOIN, data);
         this.setState(() => ({ showSetupOverlay: false }));
+    }
+
+    roundCardSelectedCallback = (card) => {
+        this.socket.emit(SOCKET_EVENTS.ROUND_CARD_SELECTED, card);
+        this.setState(() => ({ roundCardSelected: true }));
     }
 }
 

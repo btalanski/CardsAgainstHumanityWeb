@@ -1,6 +1,6 @@
 import { h, render } from 'preact';
 
-export const PlayerDeck = ({ cards = [], onSelect = () => null }) => {
+export const VoteDeck = ({ cards = [], onSelect = () => null }) => {
     return <div class="flex-wrapper">
         <div class="deck">
             {cards.map((card, i) => {

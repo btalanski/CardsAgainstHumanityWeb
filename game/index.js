@@ -30,5 +30,11 @@ module.exports = (io) => {
             console.log(Constants.SOCKET_EVENTS.READY_TO_START);
             gameInstance.setReadyToStart();
         });
+
+        // On round card submitted by player
+        socket.on(Constants.SOCKET_EVENTS.ROUND_CARD_SELECTED, (card) => {
+            console.log(Constants.SOCKET_EVENTS.READY_TO_START);
+            gameInstance.onPlayerSelectedCard(socket, card);
+        });
     });
 };

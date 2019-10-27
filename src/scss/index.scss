@@ -207,71 +207,93 @@ body,
   background: #222;
   padding: 2rem;
   border-radius: 0.6rem;
-  margin: 1.5rem auto;
+  margin: .5rem auto;  
   @media screen and (max-width: 1160px) {
     flex-basis: 82.5%;
   }
 
+  .blank {
+    display: inline-block;
+    width: 200px;
+    border-bottom: 2px solid #fff;
+  }
+
   h1 {
     color: #fff;
+    @media screen and (max-width: 500px) {
+      font-size: $size-5;
+    }
   }
 }
 
-.clock{
+.box{
+  flex-basis: 52.5%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: #c3c3c3;
+  padding: 2rem;
+  border-radius: 0.6rem;
+  margin: .5rem auto;
+  flex-direction: column;
+  @media screen and (max-width: 1160px) {
+    flex-basis: 82.5%;
+  }
+}
+
+.clock {
   flex-grow: 1;
   background: #ccc;
 }
 
-.playerDeck {
+.deck {
+  flex-basis: 55%;
+  margin: auto;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 
-  .deck {
-    flex-basis: 55%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-
-    @media screen and (max-width: 1160px) {
-      flex-basis: 85%;
-    }
-
-    @media screen and (max-width: 500px) {
-      flex-basis: 100%;
-    }
-
-    > div {
-      box-sizing: border-box;
-      margin: 10px;
-      min-height: 258px;
-      height: 258px;
-      min-width: 185px;
-      width: 185px;
-      position: relative;
-      cursor: pointer;
-      transform-origin: 40% 50%;
-      perspective: 500px;
-
-      &:hover {
-        transform-origin: 100%;
-        transform: translateY(-10px) rotateZ(-1deg);
-      }
-    }
+  @media screen and (max-width: 1160px) {
+    flex-basis: 85%;
   }
 
-  .deckCard {
+  @media screen and (max-width: 500px) {
+    flex-basis: 100%;
+  }
+
+  > div {
     box-sizing: border-box;
-    background: #fff;
-    color: #000;
-    border-radius: 0.6rem;
-    padding: 1.2rem;
-    font-weight: bold;
-    text-align: left;
-    font-size: 0.95rem;
-    transition: transform 0.3s ease-in-out, transform-origin 0.4s ease-in-out, margin 0.6s ease-in-out,
-      margin-top 0.1s ease-out;
+    margin: 10px;
+    min-height: 258px;
+    height: 258px;
+    min-width: 185px;
+    width: 185px;
+    position: relative;
+    cursor: pointer;
+    transform-origin: 40% 50%;
+    perspective: 500px;
+
+    &:hover {
+      transform-origin: 100%;
+      transform: translateY(-10px) rotateZ(-1deg);
+    }
   }
+}
+
+.deckCard {
+  box-sizing: border-box;
+  background: #fff;
+  color: #000;
+  border-radius: 0.6rem;
+  padding: 1.2rem;
+  font-weight: bold;
+  text-align: left;
+  font-size: 0.95rem;
+  transition: transform 0.3s ease-in-out, transform-origin 0.4s ease-in-out, margin 0.6s ease-in-out,
+    margin-top 0.1s ease-out;
 }
 
 .app-modal {
