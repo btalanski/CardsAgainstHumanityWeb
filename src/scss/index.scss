@@ -183,7 +183,6 @@ body,
 }
 
 .waiting-screen {
-  flex-basis: 55%;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -220,6 +219,7 @@ body,
 
   h1 {
     color: #fff;
+    font-size: $size-4;
     @media screen and (max-width: 500px) {
       font-size: $size-5;
     }

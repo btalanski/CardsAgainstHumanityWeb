@@ -4,12 +4,12 @@ import { Chat } from "./chat";
 import { PlayersList } from "./playersList";
 import { Debugger } from "./debugger";
 import { SetupOverlay } from "./setupOverlay";
-import { PlayerDeck } from "./playerDeck";
 import { Title, TitleBar } from "./titleBar";
 import { WaitingScreen } from "./waitingScreen";
 import { Game } from "./game";
+import { Box } from "./box";
 import { SocketContext } from "./socketContext";
-import { mockState } from "../utils/mockState.js";
+// import { mockState } from "../utils/mockState.js";
 import { SOCKET_EVENTS, GAME_STATE } from "../constants";
 
 export class Main extends Component {
@@ -31,6 +31,7 @@ export class Main extends Component {
         showSetupOverlay: true,
         connected: false,
         roundCardSelected: false,
+        roundVoteSubmitted: false,
     }
 
     render(props, state) {
@@ -73,7 +74,6 @@ export class Main extends Component {
         });
 
         this.socket.on(SOCKET_EVENTS.GAME_UPDATE, ({ player, otherPlayers, gameState }) => {
-            console.log(SOCKET_EVENTS.GAME_UPDATE);
             const { state } = gameState;
 
             this.setState((prevState) => {
@@ -83,6 +83,7 @@ export class Main extends Component {
                     playersState: otherPlayers,
                     gameStateLoaded: true,
                     roundCardSelected: state === GAME_STATE.NEXT_ROUND ? false : prevState.roundCardSelected,
+                    roundVoteSubmitted: state === GAME_STATE.NEXT_ROUND ? false : prevState.roundVoteSubmitted,
                 };
             })
         });
@@ -105,21 +106,19 @@ export class Main extends Component {
     }
 
     gameStarted = (state) => {
-        const startedStates = [
+        return !![
             GAME_STATE.ROUND_SETUP,
             GAME_STATE.ROUND_START,
             GAME_STATE.ROUND_VOTE,
             GAME_STATE.ROUND_VOTE_RESULT,
             GAME_STATE.ROUND_END,
             GAME_STATE.NEXT_ROUND,
-        ];
-
-        return !!startedStates.find(s => s === state);
+        ].find(s => s === state);
     }
 
     renderPlayersList = () => {
-        const { gameStateLoaded = false, playersState = [] } = this.state;
-        if (gameStateLoaded && playersState.length > 0) {
+        const { playersState = [] } = this.state;
+        if (this.gameReady() && playersState.length > 0) {
             return <PlayersList {...{ players: playersState }} ></PlayersList>
         }
         return null;
@@ -164,7 +163,7 @@ export class Main extends Component {
                     onStart: this.submitReadyToStart,
                 };
 
-                return <WaitingScreen {...props}></WaitingScreen>
+                return <Box><WaitingScreen {...props}></WaitingScreen></Box>
             }
         }
         return null;
@@ -177,7 +176,7 @@ export class Main extends Component {
 
     renderGameBoard = () => {
         if (this.gameReady()) {
-            const { connected, gameState, playerState, roundCardSelected } = this.state;
+            const { gameState, playerState, roundCardSelected, roundVoteSubmitted } = this.state;
             const { state } = gameState;
 
             if (this.gameStarted(state)) {
@@ -186,6 +185,8 @@ export class Main extends Component {
                     playerState,
                     roundCardSelected: roundCardSelected,
                     onSelectCard: this.roundCardSelectedCallback,
+                    roundVoteSubmitted:roundVoteSubmitted,
+                    onVoteCard: this.roundVoteCallback,
                 }
                 return <Game {...props}></Game>
             }
@@ -202,7 +203,6 @@ export class Main extends Component {
     }
 
     submitPlayerInfo = (data) => {
-        console.log(data);
         this.socket.emit(SOCKET_EVENTS.PLAYER_JOIN, data);
         this.setState(() => ({ showSetupOverlay: false }));
     }
@@ -210,6 +210,11 @@ export class Main extends Component {
     roundCardSelectedCallback = (card) => {
         this.socket.emit(SOCKET_EVENTS.ROUND_CARD_SELECTED, card);
         this.setState(() => ({ roundCardSelected: true }));
+    }
+
+    roundVoteCallback = (playerId) => {
+        this.socket.emit(SOCKET_EVENTS.ROUND_VOTE, playerId);
+        this.setState(() => ({ roundVoteSubmitted: true }));
     }
 }
 

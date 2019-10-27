@@ -36,5 +36,11 @@ module.exports = (io) => {
             console.log(Constants.SOCKET_EVENTS.READY_TO_START);
             gameInstance.onPlayerSelectedCard(socket, card);
         });
+
+        // On vote submitted by player
+        socket.on(Constants.SOCKET_EVENTS.ROUND_VOTE, (playerId) => {
+            console.log(Constants.SOCKET_EVENTS.ROUND_VOTE, playerId);
+            gameInstance.onPlayerVote(playerId);
+        });
     });
 };

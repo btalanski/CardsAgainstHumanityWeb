@@ -20,8 +20,7 @@ export class Game extends Component {
     }
 
     renderRoundQuestion = () => {
-        const { playerState, gameState } = this.props;
-        const { roundQuestion, state } = gameState;
+        const { gameState: { roundQuestion, state } } = this.props;
         const props = {
             roundQuestion,
         }
@@ -32,11 +31,14 @@ export class Game extends Component {
     }
 
     renderPlayerDeck = () => {
-        const { playerState, gameState, onSelectCard, roundCardSelected } = this.props;
-        const { cards } = playerState;
-        const { state, roundTimer, roundQuestion } = gameState;
+        const { gameState, roundCardSelected } = this.props;
 
-        if (state === GAME_STATE.ROUND_START && !roundCardSelected) {
+        if (gameState.state === GAME_STATE.ROUND_START && !roundCardSelected) {
+            const {
+                onSelectCard,
+                playerState: { cards },
+                gameState: { roundTimer, roundQuestion },
+            } = this.props;
             return <div>
                 <Box>
                     <h1>Selecione <b>{roundQuestion.pick}</b> carta.</h1>
@@ -50,21 +52,29 @@ export class Game extends Component {
     }
 
     renderVoteDeck = () => {
-        const { playerState, gameState, onSelectCard, roundCardSelected } = this.props;
-        const { state, roundSelectedCards, roundTimer } = gameState;
+        const { gameState: { state }, roundCardSelected } = this.props;
 
         const shouldRender = state === GAME_STATE.ROUND_VOTE || state === GAME_STATE.ROUND_VOTE_RESULT || roundCardSelected;
 
         if (shouldRender) {
+            const { 
+                playerState: { id },
+                gameState: { roundSelectedCards, roundTimer },
+                roundVoteSubmitted,
+                onVoteCard,
+            } = this.props;
+
             const props = {
                 cards: roundSelectedCards,
-                onSelect: state === GAME_STATE.ROUND_VOTE ? onSelectCard : null,
+                playerId: id,
+                onSelect: onVoteCard,
+                allowVote: state === GAME_STATE.ROUND_VOTE && !roundVoteSubmitted,
             }
             const msgs = {};
             msgs[GAME_STATE.ROUND_VOTE] = "Selecione a melhor resposta.";
             msgs[GAME_STATE.ROUND_VOTE_RESULT] = "[#], venceu está rodada!";
 
-            const msg = msgs[state] ? msgs[state] : "Aguardando os outros jogadores.";
+            const msg = msgs[state] ? msgs[state] : "Aguardando os outros jogadores escolherem.";
 
             return <div>
                 <Box>
@@ -82,7 +92,7 @@ export class Game extends Component {
 
         if (state === GAME_STATE.NEXT_ROUND) {
             return <Box>
-                <h1 class="title is-3">Iniciando nova rodada em <b>{roundTimer}</b></h1>
+                <h1 class="title is-3">Iniciando nova rodada em <b>{roundTimer}</b> segundos.</h1>
             </Box>
         }
 

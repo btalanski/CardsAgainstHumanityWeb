@@ -2,7 +2,7 @@ const CONSTANTS = require("../consts");
 const PlayerClass = require("./player");
 const AnswersDeck = require("./answersDeck");
 const QuestionsDeck = require("./questionDeck");
-
+const PortraitsModel = require("./portraits");
 
 class Game {
     constructor() {
@@ -27,6 +27,7 @@ class Game {
         this.roundTimerInterval = null;
         this.roundSelectedCards = [];
         this.shouldSendUpdate = false;
+        this.portraits = new PortraitsModel();
         // Start game loop
         this.loop = setInterval(() => this.update(), 1000 / 60);
     }
@@ -152,14 +153,26 @@ class Game {
         const { id: socketId } = socket;
         const hasPlayers = Object.keys(this.sockets).length > 0;
         this.sockets[socketId] = socket;
-        this.players[socketId] = new PlayerClass({ id: socketId, isHost: !hasPlayers, name: nickName });
+        this.players[socketId] = new PlayerClass({ 
+            id: socketId,
+            isHost: !hasPlayers,
+            name: nickName,
+            portrait: this.portraits.pop(),
+        });
         this.currentPlayers = Object.keys(this.players).length;
         this.shouldSendUpdate = true;
     }
 
     removePlayer(socket) {
+        const player = this.players[socket.id];
+
+        if(player){
+            this.portraits.push(player.portrait);
+        }
+
         delete this.sockets[socket.id];
         delete this.players[socket.id];
+
         this.currentPlayers = Object.keys(this.players).length;
         this.shouldSendUpdate = true;
     }
@@ -209,7 +222,7 @@ class Game {
         this.shouldSendUpdate = true;
     }
 
-    onPlayerSelectedCard(socket, card){
+    onPlayerSelectedCard(socket, card) {
         const player = this.players[socket.id];
 
         const selectedCard = {
@@ -220,6 +233,17 @@ class Game {
         };
 
         this.roundSelectedCards.push(selectedCard);
+        this.shouldSendUpdate = true;
+    }
+
+    onPlayerVote(playerId) {
+        this.roundSelectedCards = this.roundSelectedCards.map(card => {
+            if (card.playerId === playerId) {
+                const { votes } = card;
+                card.votes = votes + 1;
+            }
+            return card;
+        });
         this.shouldSendUpdate = true;
     }
 

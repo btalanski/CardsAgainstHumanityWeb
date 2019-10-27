@@ -12,11 +12,9 @@ export const WaitingScreen = ({
         : "Aguardando jogadores para iniciar a partida.";
     const isReady = readyToStart && isHost && currentPlayers >= minRequiredPlayers;
     
-    return <div class="flex-wrapper">
-        <div class="waiting-screen">
+    return <div class="waiting-screen">
             <h1 class="title is-3">{msg}</h1>
-            <p class="title is-4">{`${currentPlayers}/${minRequiredPlayers}`} prontos.</p>
+            <p class="title is-4">{`${currentPlayers}/${minRequiredPlayers}`}</p>
             {isReady && <button class="button is-black is-large" onClick={onStart}>Iniciar partida</button>}
-        </div>
-    </div>;
+        </div>;
 }
