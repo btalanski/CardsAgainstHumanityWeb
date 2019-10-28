@@ -13,8 +13,8 @@ fastify.get('/', function (req, reply) {
 
 const start = () => {
     const io = require('socket.io')(fastify.server);
-    const startGame = require('./game');
-    startGame(io);
+    const gameServer = require('./gameServer');
+    gameServer(io);
     
     fastify.listen(config.get("defaultPort"), function (err, address) {
         if (err) {

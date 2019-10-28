@@ -82,37 +82,6 @@ const commonConfig = merge([{
     }
 }]);
 
-// const prodConfig = (config) => require("./webpack/prod.parts.js")(config);
-
-const devConfig = (config) => {
-    return merge([{
-        output: {
-            filename: 'app.js',
-            path: path.resolve(__dirname, 'dist'),
-        },
-        plugins: [
-            require('./webpack/htmlWebpackDev.config.js')(config),
-        ],
-        devServer: {
-            contentBase: path.join(__dirname, 'dist'),
-            // Display only errors to reduce the amount of output.
-            stats: "errors-only",
-            // Parse host and port from env to allow customization.
-            //
-            // If you use Docker, Vagrant or Cloud9, set
-            // host: "0.0.0.0";
-            //
-            // 0.0.0.0 is available to all network devices
-            // unlike default `localhost`.
-            host: config.host, // Defaults to `localhost`
-            port: config.devServerPort,
-            open: true, // Open the page in browser,
-            historyApiFallback: true, // If you are using HTML5 History API based routing
-        },
-        devtool: "inline-source-map",
-    }]);
-}
-
 module.exports = mode => {
     const defaults = {
         mode,
@@ -133,7 +102,7 @@ module.exports = mode => {
     return merge(
         commonConfig,
         commonPluginsConfig,
-        devConfig(defaults),
+        require("./webpack/dev.parts.js")(defaults),
         { mode }
     );
 };

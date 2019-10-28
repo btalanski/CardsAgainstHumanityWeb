@@ -2,16 +2,29 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const merge = require('webpack-merge');
 const path = require('path');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const prodConfig = (config) => {
+    
     return merge([{
         output: {
             filename: 'app.js',
             path: path.resolve(appRoot, 'dist'),
-            publicPath: "dist"
+            publicPath: "dist/"
         },
         plugins: [
-            require('./htmlWebpack.config.js')(config),
+            new HtmlWebpackPlugin({
+                inject: false,
+                appMountId: 'app',
+                template: require('html-webpack-template'),
+                meta: [],
+                mobile: true,
+                lang: 'pt-BR',
+                links: [],
+                inlineManifestWebpackName: 'webpackManifest',
+                scripts: [],
+                title: 'Cards Against Humanity App',
+            })
         ],
         optimization: {
             sideEffects: true,

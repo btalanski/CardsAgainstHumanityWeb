@@ -1,25 +1,37 @@
-# Cards Against Humanity Web
+# Cards Against Humanity Web App
 
-Host and run your own Cards Against Humanity server.
+Host and run your own Cards Against Humanity web game.
+
+## About
+
+This project started as a simple study as how to implement a socket.io multiplayer game server. React was used to build the UI for the client. This is a really simple implementation of both server, client and game logic. This is not a production ready software in any manner. No support is offered to fix bugs, code is made available "as is". Feel free to clone this repo and make your own customizations.
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
-
-What things you need to install the software and how to install them
-
 ```
-NodeJs
-Webpack
+Node.js v10+ (LTS recommended)
 ```
 
 ### Installing
 
-Follow the instructions below to start a local server:
+* Clone this repo
+* Run `npm install` on the root folder
 
 Access the application at `http://localhost:8080`
+
+### Run the application
+To start the server execute the following command:
+```
+npm start
+```
+
+To start webpack dev server:
+```
+npm run build
+```
 
 ## Running the tests
 
@@ -27,37 +39,39 @@ No tests implemented yet.
 
 ## Deployment
 
-Deploying to Google Cloud
+You can use Google Cloud free tier to host the app and play with friends.
 
-- Create a project on Google Cloud and configure your gcloud SDK
+**Deploying to Google Cloud**
 
-Run the command to list projects
+* Create a project on Google Cloud
+* Setup the `gcloud` SDK on your computer
+* Follow the commands below
+
+List your `gcloud` projects:
 ```
 gcloud projects list
 ```
-
-Run the command to select the project
+Run the command to select the project you created for this app:
 ```
 gcloud config set project `PROJECT_ID`
 ```
-
-Deploy with 
+Deploy the app using the following command:
 ```
 gcloud app deploy
 ```
-
-
 ## Built With
 
 * [Socket.IO](https://socket.io)
 * [Node.js](https://nodejs.org)
+* [React](https://reactjs.org)
+* [Webpack](https://webpack.js.org)
 
 ## Contributing
 N/A
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+N/A
 
 ## Authors
 

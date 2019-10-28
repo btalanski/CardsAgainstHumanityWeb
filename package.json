@@ -1,7 +1,7 @@
 {
   "name": "cards-against-humanity-web",
   "version": "1.0.0",
-  "description": "Web implementation of a Client/Server app to play Cards against Humanity",
+  "description": "Web implementation of a Client/Server app to play Cards Against Humanity",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,7 +15,7 @@
     "url": "git+https://github.com/btalanski/CartasContraAHumanidadeWeb.git"
   },
   "author": "Bruno Talanski",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/btalanski/CartasContraAHumanidadeWeb/issues"
   },
