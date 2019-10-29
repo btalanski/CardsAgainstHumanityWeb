@@ -18,8 +18,11 @@ node_modules/
 
 src/
 etc/
+webpack/
 npm-debug.log
 package-lock.json
 README.md
 webpack.config.js
-webpack/
+LICENSE.md
+README.md
+README.pt-br.md
