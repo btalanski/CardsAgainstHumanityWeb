@@ -2,9 +2,25 @@
 
 Host and run your own Cards Against Humanity web game.
 
-## About
+*Read this in other languages: [Português](https://github.com/btalanski/CartasContraAHumanidadeWeb/blob/master/README.pt-br.md).*
 
-This project started as a simple study as how to implement a socket.io multiplayer game server. React was used to build the UI for the client. This is a really simple implementation of both server, client and game logic. This is not a production ready software in any manner. No support is offered to fix bugs, code is made available "as is". Feel free to clone this repo and make your own customizations.
+## About
+This project is a simple study as how to implement a Node.js and Socket.io multiplayer game. React was used to build the UI for the client. This is a really simple implementation of both server, client and game logic. This is not a production ready software in any manner. No support is offered to fix bugs, code is made available "as is". Feel free to clone this repo and make your own customizations.
+
+## To-dos:
+This is a list of things I *want* to implement, but are out of the scope of this project for now:
+
+#### Frontend
+- [ ] Implement Redux
+- [ ] Improve components code
+- [ ] Improve the overall UI design
+- [ ] Implement multiple card answers
+- [ ] Implement chat component
+- [ ] Improve error handling
+
+#### Backend
+- [ ] Improve server code (refactor)
+- [ ] Improve game code (refactor)
 
 ## Getting Started
 
@@ -20,8 +36,6 @@ Node.js v10+ (LTS recommended)
 * Clone this repo
 * Run `npm install` on the root folder
 
-Access the application at `http://localhost:8080`
-
 ### Run the application
 To start the server execute the following command:
 ```
@@ -33,9 +47,11 @@ To start webpack dev server:
 npm run build
 ```
 
+Access the application at `http://localhost:8080` or `http://localhost:9001` for the dev server
+
 ## Running the tests
 
-No tests implemented yet.
+No tests implemented.
 
 ## Deployment
 
