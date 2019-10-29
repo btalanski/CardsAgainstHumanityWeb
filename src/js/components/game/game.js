@@ -12,10 +12,10 @@ export class Game extends Component {
 
     render() {
         return <div>
-            {this.renderNextTurnAlert()}
             {this.renderRoundQuestion()}
             {this.renderPlayerDeck()}
             {this.renderVoteDeck()}
+            {this.renderNextTurnAlert()}
         </div>
     }
 
@@ -24,9 +24,7 @@ export class Game extends Component {
         const props = {
             roundQuestion,
         }
-
-        const shouldRender = state !== GAME_STATE.NEXT_ROUND;
-
+        const shouldRender = [GAME_STATE.ROUND_START, GAME_STATE.ROUND_VOTE, GAME_STATE.NEXT_ROUND].includes(state);
         return shouldRender ? <RoundQuestion {...props}></RoundQuestion> : null;
     }
 
@@ -57,7 +55,7 @@ export class Game extends Component {
         const shouldRender = state === GAME_STATE.ROUND_VOTE || state === GAME_STATE.ROUND_VOTE_RESULT || roundCardSelected;
 
         if (shouldRender) {
-            const { 
+            const {
                 playerState: { id },
                 gameState: { roundSelectedCards, roundTimer },
                 roundVoteSubmitted,

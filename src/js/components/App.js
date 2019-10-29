@@ -27,7 +27,7 @@ export class Main extends Component {
         gameStateLoaded: false,
         playerState: null,
         playersState: [],
-        showDebug: false,
+        showDebug: true,
         showSetupOverlay: true,
         connected: false,
         roundCardSelected: false,
@@ -101,8 +101,7 @@ export class Main extends Component {
     }
 
     gameReady = () => {
-        const { connected, gameStateLoaded, gameState, showSetupOverlay } = this.state;
-        return connected && gameStateLoaded && gameState && !showSetupOverlay;
+        return this.state.connected && this.state.gameStateLoaded;
     }
 
     gameStarted = (state) => {
@@ -117,8 +116,8 @@ export class Main extends Component {
     }
 
     renderPlayersList = () => {
-        const { playersState = [] } = this.state;
-        if (this.gameReady() && playersState.length > 0) {
+        if (this.gameReady()) {
+            const { playersState = [] } = this.state;
             return <PlayersList {...{ players: playersState }} ></PlayersList>
         }
         return null;
@@ -139,30 +138,25 @@ export class Main extends Component {
     }
 
     renderSetupOverlay = () => {
-        const { showSetupOverlay, connected, gameStateLoaded } = this.state;
-        const show = showSetupOverlay && connected && !gameStateLoaded;
-        return show
+        const { showSetupOverlay, connected } = this.state;
+        return showSetupOverlay && connected
             ? <SetupOverlay isVisible={true} onSubmit={this.submitPlayerInfo} />
             : null;
     }
 
     renderWaitingScreen = () => {
         if (this.gameReady()) {
-            const { gameState, playerState } = this.state;
-            const { state } = gameState;
+            const { gameState: { state } } = this.state;
 
             if (state === GAME_STATE.WAITING_FOR_PLAYERS || state === GAME_STATE.WAITING_TO_START) {
-                const { currentPlayers, minRequiredPlayers } = gameState;
-                const { isHost } = playerState;
-
+                const { gameState: { currentPlayers, minRequiredPlayers }, playerState: { isHost } } = this.state;
                 const props = {
+                    isHost,
                     currentPlayers,
                     minRequiredPlayers,
-                    readyToStart: state === GAME_STATE.WAITING_TO_START,
-                    isHost,
                     onStart: this.submitReadyToStart,
+                    readyToStart: state === GAME_STATE.WAITING_TO_START,
                 };
-
                 return <Box><WaitingScreen {...props}></WaitingScreen></Box>
             }
         }
@@ -176,16 +170,17 @@ export class Main extends Component {
 
     renderGameBoard = () => {
         if (this.gameReady()) {
-            const { gameState, playerState, roundCardSelected, roundVoteSubmitted } = this.state;
-            const { state } = gameState;
+            const { gameState: { state } } = this.state;
 
             if (this.gameStarted(state)) {
+                const { gameState, playerState, roundCardSelected, roundVoteSubmitted } = this.state;
+
                 const props = {
                     gameState,
                     playerState,
                     roundCardSelected: roundCardSelected,
                     onSelectCard: this.roundCardSelectedCallback,
-                    roundVoteSubmitted:roundVoteSubmitted,
+                    roundVoteSubmitted: roundVoteSubmitted,
                     onVoteCard: this.roundVoteCallback,
                 }
                 return <Game {...props}></Game>

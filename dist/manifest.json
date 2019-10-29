@@ -1,6 +1,6 @@
 {
-  "main.css": "distapp.css",
-  "main.js": "distapp.js",
-  "app.js.LICENSE": "distapp.js.LICENSE",
-  "index.html": "distindex.html"
+  "main.css": "dist/app.css",
+  "main.js": "dist/app.js",
+  "app.js.LICENSE": "dist/app.js.LICENSE",
+  "index.html": "dist/index.html"
 }
